@@ -12,7 +12,7 @@
 }
 
 #center {
-	-fx-border-color:#F22222;
-	-fx-border-style:dotted;
+	-fx-border-color:#000000;
+	-fx-border-style:solid;
 	-fx-border-width:5px;
 }

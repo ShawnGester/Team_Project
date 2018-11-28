@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -58,8 +59,8 @@ public class PrimaryGUI {
 			TextField queryFood = new TextField("Search for a food...");
 			
 			ListView<String> foodList = new ListView<String>();
-			foodList.setPrefWidth(300);
-			foodList.setPrefHeight(300);
+			foodList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.25);
+			foodList.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.4);
 			//FIXME: event handler to foods
 			Label selectedFoods = new Label("Displaying 0 of 0 foods"); //number of foods out of total after filter
 			
@@ -82,9 +83,10 @@ public class PrimaryGUI {
 			Button add = new Button("Add");
 			HBox filter = new HBox(10);
 			filter.getChildren().addAll(compFilters, queryValue, add); //FIXME: queryValue and add not staying on same line??
+			
 			ListView<String> filterList = new ListView<String>();
-			filterList.setPrefWidth(200);
-			filterList.setPrefHeight(150);
+			filterList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.15);
+			filterList.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.15);
 			HBox buttons = new HBox(20);
 			Button edit = new Button("EDIT");
 			Button delete = new Button("DELETE");
@@ -94,6 +96,7 @@ public class PrimaryGUI {
 			Button displayFood = new Button("Display Food");
 			Button downloadFood = new Button("Download Food List");
 			Label foods = new Label("Foods");
+			
 			
 //			ObservableList<String> items = FXCollections.observableArrayList (); //MILESTONE 3 READ IN FROM FOODDATA
 //			List.setItems(items);
