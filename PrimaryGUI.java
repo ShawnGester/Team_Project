@@ -16,6 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class PrimaryGUI {
@@ -26,7 +27,10 @@ public class PrimaryGUI {
 	public PrimaryGUI(FoodData foodData, Stage primaryStage) {
 		try {
 			BorderPane root = new BorderPane();
-			Scene scene = new Scene(root,1400,900);
+			Scene scene = new Scene(root,
+					Screen.getPrimary().getVisualBounds().getWidth(),
+					Screen.getPrimary().getVisualBounds().getHeight());
+					//Bases sizing off of screen size.
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm()); //FIXME: Alex's
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -37,7 +41,9 @@ public class PrimaryGUI {
 			
 			Label centerLabel = new Label("Details");
 			BorderPane top = new BorderPane(topLabel);
+			top.setId("top");
 			BorderPane center = new BorderPane(centerLabel);
+			center.setId("center");
 			
 			root.setTop(top);
 //			root.setBottom(bottom);

@@ -1,1 +1,18 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.root {
+	/*-fx-background-color: #00FF7F;*/
+	-fx-background-image:url("../images/grocerystore1.JPG");
+	-fx-background-position:center;
+	-fx-background-size:contain;
+}
+
+#top {
+	-fx-font: bold 20pt serif;
+}
+
+#center {
+	-fx-border-color:#F22222;
+	-fx-border-style:dotted;
+	-fx-border-width:5px;
+}
