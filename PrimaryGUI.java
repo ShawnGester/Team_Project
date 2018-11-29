@@ -68,7 +68,7 @@ public class PrimaryGUI {
 			ListView<String> foodList = new ListView<String>();
 			foodList.prefWidthProperty().set(SCREEN_WIDTH/4.2);
 //			foodList.prefWidthProperty().bind(flow.widthProperty());
-			foodList.setPrefHeight(SCREEN_HEIGHT/6);
+			foodList.setPrefHeight(SCREEN_HEIGHT/8);
 			//FIXME: event handler to foods
 			Label selectedFoods = new Label("Displaying 0 of 0 foods"); //number of foods out of total after filter
 			
@@ -118,16 +118,17 @@ public class PrimaryGUI {
 			
 			FlowPane mealFlow = new FlowPane(Orientation.VERTICAL, 0, 10); //gives vertical spacing between
 			mealFlow.setId("right");
-			mealFlow.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.27);
+			mealFlow.setPrefWidth(SCREEN_WIDTH / 4);
 			mealFlow.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
-			mealFlow.setPadding(new Insets(0,0,0,10));
+			mealFlow.setPadding(new Insets(0,RIGHT_INSET,0,LEFT_INSET));
 			root.setRight(mealFlow);
 			mealFlow.setColumnHalignment(HPos.LEFT); // align labels on left
 			TextField queryMeal = new TextField("Search for a meal...");
 			
 			ListView<String> mealList = new ListView<String>();
+			mealList.setPrefHeight(SCREEN_HEIGHT/8);
 //			mealList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.25);
-			mealList.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.35);
+			mealList.prefWidthProperty().set(SCREEN_WIDTH/4.2);
 			//FIXME: event handler to foods
 			Label selectedMeals = new Label("Displaying 0 of 0 meals"); //number of foods out of total after filter
 			
@@ -152,8 +153,8 @@ public class PrimaryGUI {
 			mealFilter.getChildren().addAll(mealCompFilters, mealQueryValue, mealAdd); 
 			
 			ListView<String> mealFilterList = new ListView<String>();
-			mealFilterList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.20);
-			mealFilterList.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.25);
+//			mealFilterList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.20);
+			mealFilterList.setPrefHeight(SCREEN_HEIGHT/10);
 			HBox mealButtons = new HBox(20);
 			Button mealEdit = new Button("EDIT");
 			Button mealDelete = new Button("DELETE");
@@ -162,9 +163,10 @@ public class PrimaryGUI {
 			
 			Button displayMeals = new Button("Display Meals");
 			Label meals = new Label("Meals");
+			Label empty = new Label(""); //FIXME is this ok?
 			
 			mealFlow.getChildren().addAll(newMeal, queryMeal, mealList, selectedMeals, mealFilters,
-					mealFilter, mealFilterList, mealButtons, displayMeals, meals);
+					mealFilter, mealFilterList, mealButtons, displayMeals, empty, meals);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
