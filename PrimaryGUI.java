@@ -22,13 +22,18 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * Represents the Primary GUI that the user will interact with. Initializes all GUI objects in 
+ * constructor.
+ * @author Cole Thomosn
+ *
+ */
 public class PrimaryGUI {
-	public FoodData foodData;
-	//	public FoodItemAddForm foodAddForm;
+	
+	public FoodData foodData; // Food Data used in Meal Planner Program
 	private static final double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth(); 
 	private static final double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getWidth();
 
-	
 	/**
 	 * Handles Primary GUI for Meal Planner program. Single stage with single scene that has
 	 * three main panes. First pane on left-hand side of screen is "Food Pane". Food Pane allows
@@ -106,128 +111,145 @@ public class PrimaryGUI {
 					"Protein"
 				); // Options to filter food list by
 			
-			/*
-			 *FIXME Stopped here 
-			 */
-			ComboBox<String> filters = new ComboBox<String>(filterOptions);
-			filters.setValue("Select a filter");
+			ComboBox<String> foodFiltersCBox = new ComboBox<String>(filterOptions); // Filter CBox
 			
-			ObservableList<String> compOptions = FXCollections.observableArrayList(
+			// Set default value of foodFilterCBox to prompt user to select a filter
+			foodFiltersCBox.setValue("Select a filter");
+			
+			ObservableList<String> foodCompOptions = FXCollections.observableArrayList(
 					"=",
 					">=",
 					"<="
-				);
-			ComboBox<String> compFilters = new ComboBox<String>(compOptions);
-			compFilters.setValue("=");
+				); // Types of comparisons available for filters
 			
-			TextField queryValue = new TextField("");
-			queryValue.setPrefWidth(100);
+			// ComboBox of comparison operators to determine food filter criteria 
+			ComboBox<String> foodCompFiltersCBox = new ComboBox<String>(foodCompOptions);  
 			
-			Button add = new Button("Add");
+			// Set default value of foodCompFiltersCBox to "="
+			foodCompFiltersCBox.setValue("=");
 			
-			HBox filter = new HBox(10);
-			filter.getChildren().addAll(compFilters, queryValue, add); 
+			TextField foodFilterValue = new TextField(""); // user inputs filter value
 			
-			ListView<String> filterList = new ListView<String>(); 
-			filterList.setPrefHeight(SCREEN_HEIGHT/11);
+			// Set Width of foodFilterValue 
+			foodFilterValue.setPrefWidth(100);
 			
-			HBox buttons = new HBox(10);
-			Button edit = new Button("Edit");
-			Button delete = new Button("Delete");
+			Button foodFilterAddButton = new Button("Add"); // Applies filter and adds to list
+			HBox foodFilterHBox = new HBox(10); // HBox to hold group of food filter GUI objects
+			ListView<String> foodFilterLView = new ListView<String>(); // list of applied filters
 			
-			buttons.getChildren().addAll(edit, delete);
+			// Set Height of foodFilterLView to ~9% of screen height
+			foodFilterLView.setPrefHeight(SCREEN_HEIGHT/11);
 			
-			//FILTERGUI END
+			HBox buttonsHBox = new HBox(10); // HBox to hold "Edit" and "Delete" buttons
+			Button foodEditFilterButton = new Button("Edit"); 		// Button to edit a filter
+			Button foodDeleteFilterButton = new Button("Delete"); 	// Button to delete a filter
+			Button displayFoodButton = new Button("Display Food"); 	// Button to display food details
+			Button downloadFoodButton = new Button("Download Food List"); // download list of foods
+			Label foodPaneLabel = new Label("Foods"); // Heading for food pane (left pane)
 			
-			Button displayFood = new Button("Display Food");
-			Button downloadFood = new Button("Download Food List");
-			Label foods = new Label("Foods");
+			// Add food filter GUI objects to HBox
+			foodFilterHBox.getChildren().addAll(foodCompFiltersCBox, foodFilterValue, foodFilterAddButton); 
+			
+			// Add "Edit" and "Delete" buttons to HBox
+						buttonsHBox.getChildren().addAll(foodEditFilterButton, foodDeleteFilterButton);
 			
 			// Set GUI Objects on Food Pane
-			foodPaneVBox.getChildren().addAll(newFoodButton, queryFoodField, foodListView, dispFoodsLabel, filters, 
-					filter, filterList, buttons, displayFood, downloadFood, foods);
+			foodPaneVBox.getChildren().addAll(newFoodButton, queryFoodField, foodListView, dispFoodsLabel, foodFiltersCBox, 
+					foodFilterHBox, foodFilterLView, buttonsHBox, displayFoodButton, downloadFoodButton, foodPaneLabel);
 			
 			
 			/**
-			 * Meal Pane
+			 * Meal Pane (right section of main BoarderPane)
 			 */
-
-			Button newMeal = new Button("+ New Meal");
+			VBox mealPaneVBox = new VBox(10.0); // VBox to hold meal pane GUI objects
 			
-
-			VBox mealFlow = new VBox(10.0); //gives vertical spacing between
+			// Set Width of mealPaneVBox to 25% of screen width
+			mealPaneVBox.setPrefWidth(SCREEN_WIDTH / 4);
+			// Place mealPaneVBox at Top-Left of left section of main BPane
+			mealPaneVBox.setAlignment(Pos.TOP_LEFT);
+			// Set padding of mealPaneVBox along left side
+			mealPaneVBox.setPadding(new Insets(0,0,0,10));
+			 
+			Button newMealButton = new Button("+ New Meal"); // Button for creating new meal
+			TextField queryMealField = new TextField("Search for a meal..."); // Meal query field
+			ListView<String> mealListView = new ListView<String>(); // Filtered list of cur meals
 			
-			mealFlow.setPrefWidth(SCREEN_WIDTH / 4);
-			mealFlow.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
-			mealFlow.setPadding(new Insets(0,0,0,10));
+			// Set Width of mealListView to ~24% of the screen width
+			mealListView.prefWidthProperty().set(SCREEN_WIDTH/4.2);
+			// Set Height of mealListView to ~14% of screen height
+			mealListView.setPrefHeight(SCREEN_HEIGHT/7);
 			
-			TextField queryMeal = new TextField("Search for a meal...");
-			
-			ListView<String> mealList = new ListView<String>();
-			mealList.setPrefHeight(SCREEN_HEIGHT/7);
-//			mealList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.25);
-			mealList.prefWidthProperty().set(SCREEN_WIDTH/4.2);
-			//FIXME: event handler to foods
-			Label selectedMeals = new Label("Displaying 0 of 0 meals"); //number of foods out of total after filter
-			
-			//FILTERGUI START
-			ObservableList<String> mealFilterOptions = FXCollections.observableArrayList(
+			Label dispMealsLabel = new Label("Displaying 0 of 0 meals"); // # of total meals disp.
+			ObservableList<String> filterOptions2 = FXCollections.observableArrayList(
 					"Calories",
 					"Fat",
 					"Carbohydrates",
 					"Fiber",
 					"Protein"
-				); // Options to filter food list by
-			ComboBox mealFilters = new ComboBox(mealFilterOptions);
-			mealFilters.setValue("Select a filter");
+				); // Options to filter meal list by
+			
+			ComboBox<String> mealFiltersCBox = new ComboBox<String>(filterOptions2); // Filter CBox
+			
+			// Set default value of foodFilterCBox to prompt user to select a filter
+			mealFiltersCBox.setValue("Select a filter");
+			
 			ObservableList<String> mealCompOptions = FXCollections.observableArrayList(
 					"=",
 					">=",
 					"<="
-				); 
-			ComboBox mealCompFilters = new ComboBox(mealCompOptions);
-			mealCompFilters.setValue("=");
-			TextField mealQueryValue = new TextField("");
-			mealQueryValue.setPrefWidth(100);
+				); // Types of comparisons available for filters
 			
-			Button mealAdd = new Button("Add");
-			HBox mealFilter = new HBox(10);
-			mealFilter.getChildren().addAll(mealCompFilters, mealQueryValue, mealAdd); 
+			// ComboBox of comparison operators to determine meal filter criteria 
+			ComboBox<String> mealCompFiltersCBox = new ComboBox<String>(mealCompOptions);  
 			
-			ListView<String> mealFilterList = new ListView<String>();
-//			mealFilterList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.20);
-			mealFilterList.setPrefHeight(SCREEN_HEIGHT/11);
-			HBox mealButtons = new HBox(20);
-			Button mealEdit = new Button("EDIT");
-			Button mealDelete = new Button("DELETE");
-			mealButtons.getChildren().addAll(mealEdit, mealDelete);
-			//FILTERGUI END
+			// Set default value of foodCompFiltersCBox to "="
+			mealCompFiltersCBox.setValue("=");
 			
-			Button displayMeals = new Button("Display Meals");
-			Label meals = new Label("Meals");
+			TextField mealFilterValue = new TextField(""); // user inputs filter value
 			
-			Label empty = new Label(""); //FIXME is this ok?
+			// Set Width of mealFilterValue 
+			mealFilterValue.setPrefWidth(100);
 			
-			mealFlow.getChildren().addAll(newMeal, queryMeal, mealList, selectedMeals, mealFilters,
-					mealFilter, mealFilterList, mealButtons, displayMeals, empty, meals);
+			Button mealFilterAddButton = new Button("Add"); // Applies filter and adds to list
+			HBox mealFilterHBox = new HBox(10); // HBox to hold group of meal filter GUI objects
+			ListView<String> mealFilterLView = new ListView<String>(); // list of applied filters
 			
+			// Set Height of mealFilterLView to ~9% of screen height
+			mealFilterLView.setPrefHeight(SCREEN_HEIGHT/11);
+			
+			HBox buttonsHBox2 = new HBox(10); // HBox to hold "Edit" and "Delete" buttons
+			Button mealEditFilterButton = new Button("Edit"); 		// Button to edit a filter
+			Button mealDeleteFilterButton = new Button("Delete"); 	// Button to delete a filter
+			Button displayMealButton = new Button("Analyze Meal"); 	// Button to analyze/disp. meal
+			Label blankLabel = new Label(""); // Blank label for formatting
+			Label mealPaneLabel = new Label("Meals"); // Heading for meal pane (right pane)
+			
+			// Add food filter GUI objects to HBox
+			mealFilterHBox.getChildren().addAll(mealCompFiltersCBox, mealFilterValue, mealFilterAddButton); 
+			
+			// Add "Edit" and "Delete" buttons to HBox
+			buttonsHBox2.getChildren().addAll(mealEditFilterButton, mealDeleteFilterButton);
+			
+			// Set GUI Objects on Food Pane
+			mealPaneVBox.getChildren().addAll(newMealButton, queryMealField, mealListView, dispMealsLabel, mealFiltersCBox, 
+					mealFilterHBox, mealFilterLView, buttonsHBox2, displayMealButton, blankLabel, mealPaneLabel);
 			
 			// Set Food (left) and Meal (right) pane in main BoarderPane
 			boarderPane.setLeft(foodPaneVBox);
-			boarderPane.setRight(mealFlow);
-			
+			boarderPane.setRight(mealPaneVBox);
 			
 			// Set IDs for application.css to use for formatting
 			boarderPane.setId("root");
 			root.setId("scrollPane");
-			meals.setId("meals");
-			mealFlow.setId("right");
-			foods.setId("foods");
+			mealPaneLabel.setId("meals");
+			mealPaneVBox.setId("right");
+			foodPaneLabel.setId("foods");
 			foodPaneVBox.setId("left");
 			displayPaneLabel.setId("centerLabel");
 			topBPane.setId("top");
 			centerBPane.setId("center");
 			
+			// Show Stage
 			primaryStage.show();
 			
 		} catch(Exception e) {

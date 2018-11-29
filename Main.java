@@ -13,7 +13,11 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 
-
+/**
+ * Main class that runs JavaFX program.
+ * @author Cole Thomson
+ *
+ */
 public class Main extends Application {
 	public FoodData foodData;
 	public PrimaryGUI primaryGUI;
@@ -25,7 +29,6 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
-		//FIXME: declarations
 		launch(args);
 	}
 }
