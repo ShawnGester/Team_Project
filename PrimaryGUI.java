@@ -16,6 +16,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -44,6 +45,7 @@ public class PrimaryGUI {
 			Label topLabel = new Label("Meal Planner");
 			
 			Label centerLabel = new Label("Details");
+			centerLabel.setId("centerLabel");
 			BorderPane top = new BorderPane(topLabel);
 			top.setId("top");
 			BorderPane center = new BorderPane(centerLabel);
@@ -54,7 +56,7 @@ public class PrimaryGUI {
 			root.setCenter(center);
 			BorderPane.setAlignment(centerLabel, Pos.TOP_LEFT); //FIXME: fix left and right borderpane boundaries
 			
-			FlowPane flow = new FlowPane(Orientation.VERTICAL, 0, 10); //gives vertical spacing between 
+			VBox flow = new VBox(10.0); //gives vertical spacing between 
 			flow.setId("left");//ID for CSS
 			flow.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.27);
 
@@ -62,7 +64,7 @@ public class PrimaryGUI {
 			flow.setPadding(new Insets(0,RIGHT_INSET,0,LEFT_INSET));
 			flow.setPrefWidth(SCREEN_WIDTH / 4);
 			root.setLeft(flow);
-			flow.setColumnHalignment(HPos.LEFT); // align labels on left
+//			flow.setColumnHalignment(HPos.LEFT); // align labels on left
 			TextField queryFood = new TextField("Search for a food...");
 			
 			ListView<String> foodList = new ListView<String>();
@@ -104,7 +106,7 @@ public class PrimaryGUI {
 			Button displayFood = new Button("Display Food");
 			Button downloadFood = new Button("Download Food List");
 			Label foods = new Label("Foods");
-			
+			foods.setId("foods");
 			
 //			ObservableList<String> items = FXCollections.observableArrayList (); //MILESTONE 3 READ IN FROM FOODDATA
 //			List.setItems(items);
@@ -116,13 +118,13 @@ public class PrimaryGUI {
 
 			Button newMeal = new Button("+ New Meal");
 			
-			FlowPane mealFlow = new FlowPane(Orientation.VERTICAL, 0, 10); //gives vertical spacing between
+			VBox mealFlow = new VBox(10.0); //gives vertical spacing between
 			mealFlow.setId("right");
 			mealFlow.setPrefWidth(SCREEN_WIDTH / 4);
 			mealFlow.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
 			mealFlow.setPadding(new Insets(0,RIGHT_INSET,0,LEFT_INSET));
 			root.setRight(mealFlow);
-			mealFlow.setColumnHalignment(HPos.LEFT); // align labels on left
+//			mealFlow.setColumnHalignment(HPos.LEFT); // align labels on left
 			TextField queryMeal = new TextField("Search for a meal...");
 			
 			ListView<String> mealList = new ListView<String>();
@@ -163,6 +165,7 @@ public class PrimaryGUI {
 			
 			Button displayMeals = new Button("Display Meals");
 			Label meals = new Label("Meals");
+			meals.setId("meals");
 			Label empty = new Label(""); //FIXME is this ok?
 			
 			mealFlow.getChildren().addAll(newMeal, queryMeal, mealList, selectedMeals, mealFilters,
