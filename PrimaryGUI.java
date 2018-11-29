@@ -37,7 +37,6 @@ public class PrimaryGUI {
 			primaryStage.show();
 			
 			Button newFood = new Button("+ New Food");
-			Button newMeal = new Button("+ New Meal");
 			Label topLabel = new Label("Meal Planner");
 			
 			Label centerLabel = new Label("Details");
@@ -52,6 +51,7 @@ public class PrimaryGUI {
 			BorderPane.setAlignment(centerLabel, Pos.TOP_LEFT); //FIXME: fix left and right borderpane boundaries
 			
 			FlowPane flow = new FlowPane(Orientation.VERTICAL, 0, 10); //gives vertical spacing between 
+			flow.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.27);
 			flow.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
 			flow.setPadding(new Insets(0,20,0,10));
 			root.setLeft(flow);
@@ -59,8 +59,8 @@ public class PrimaryGUI {
 			TextField queryFood = new TextField("Search for a food...");
 			
 			ListView<String> foodList = new ListView<String>();
-			foodList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.25);
-			foodList.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.4);
+//			foodList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.25);
+			foodList.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.35);
 			//FIXME: event handler to foods
 			Label selectedFoods = new Label("Displaying 0 of 0 foods"); //number of foods out of total after filter
 			
@@ -84,9 +84,9 @@ public class PrimaryGUI {
 			HBox filter = new HBox(10);
 			filter.getChildren().addAll(compFilters, queryValue, add); //FIXME: queryValue and add not staying on same line??
 			
-			ListView<String> filterList = new ListView<String>();
-			filterList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.15);
-			filterList.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.15);
+			ListView<String> filterList = new ListView<String>(); 
+			filterList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.20);
+			filterList.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.25);
 			HBox buttons = new HBox(20);
 			Button edit = new Button("EDIT");
 			Button delete = new Button("DELETE");
@@ -101,8 +101,61 @@ public class PrimaryGUI {
 //			ObservableList<String> items = FXCollections.observableArrayList (); //MILESTONE 3 READ IN FROM FOODDATA
 //			List.setItems(items);
 			flow.getChildren().addAll(newFood, queryFood, foodList, selectedFoods, filters, 
-					compFilters, filter, filterList, buttons, displayFood, downloadFood, foods);
+					filter, filterList, buttons, displayFood, downloadFood, foods);
 			
+			
+			//MEAL
+
+			Button newMeal = new Button("+ New Meal");
+			
+			FlowPane mealFlow = new FlowPane(Orientation.VERTICAL, 0, 10); //gives vertical spacing between
+			mealFlow.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.27);
+			mealFlow.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
+			mealFlow.setPadding(new Insets(0,0,0,10));
+			root.setRight(mealFlow);
+			mealFlow.setColumnHalignment(HPos.LEFT); // align labels on left
+			TextField queryMeal = new TextField("Search for a meal...");
+			
+			ListView<String> mealList = new ListView<String>();
+//			mealList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.25);
+			mealList.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.35);
+			//FIXME: event handler to foods
+			Label selectedMeals = new Label("Displaying 0 of 0 meals"); //number of foods out of total after filter
+			
+			//FILTERGUI START
+			ObservableList<String> mealFilterOptions = FXCollections.observableArrayList(
+					"Calories",
+					"Protein",
+					"Fat"
+				); //FIXME:
+			ComboBox mealFilters = new ComboBox(mealFilterOptions);
+			mealFilters.setValue("Select a filter");
+			ObservableList<String> mealCompOptions = FXCollections.observableArrayList(
+					"=",
+					">=",
+					"<="
+				); //FIXME:
+			ComboBox mealCompFilters = new ComboBox(mealCompOptions);
+			mealCompFilters.setValue("=");
+			TextField mealQueryValue = new TextField("");
+			Button mealAdd = new Button("Add");
+			HBox mealFilter = new HBox(10);
+			mealFilter.getChildren().addAll(mealCompFilters, mealQueryValue, mealAdd); 
+			
+			ListView<String> mealFilterList = new ListView<String>();
+			mealFilterList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.20);
+			mealFilterList.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.25);
+			HBox mealButtons = new HBox(20);
+			Button mealEdit = new Button("EDIT");
+			Button mealDelete = new Button("DELETE");
+			mealButtons.getChildren().addAll(mealEdit, mealDelete);
+			//FILTERGUI END
+			
+			Button displayMeals = new Button("Display Meals");
+			Label meals = new Label("Meals");
+			
+			mealFlow.getChildren().addAll(newMeal, queryMeal, mealList, selectedMeals, mealFilters,
+					mealFilter, mealFilterList, mealButtons, displayMeals, meals);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
