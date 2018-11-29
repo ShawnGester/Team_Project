@@ -27,10 +27,7 @@ public class PrimaryGUI {
 	//	public FoodItemAddForm foodAddForm;
 	private static final double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth(); 
 	private static final double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getWidth();
-	private static final double LEFT_INSET = 10;	// Left Insets for formatting GUI Elements
-	private static final double RIGHT_INSET = 0;	// Right Insets for formatting GUI Elements
-	private static final double TOP_INSET = 0;		// Top Insets for formatting GUI Elements
-	private static final double BOTTOM_INSET = 0;	// Bottom Insets for formatting GUI Elements
+
 	
 	/**
 	 * Handles Primary GUI for Meal Planner program. Single stage with single scene that has
@@ -49,62 +46,69 @@ public class PrimaryGUI {
 			
 			ScrollPane root = new ScrollPane(); 		// Primary Pane for GUI, allows scrolling
 			BorderPane boarderPane = new BorderPane();	// Structure for visual display	
-			Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
+			Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT); // Create Scene
 			
-			root.setContent(boarderPane);	// Set BoarderPane on ScrollPane
-			root.setFitToWidth(true);		// Fit contents of ScrollPane to width of pane
-			root.setPannable(true);			// Allow ScrollPane to be pannable
-			
+			// Set BoarderPane on ScrollPane
+			root.setContent(boarderPane);	
+			// Fit contents of ScrollPane to width of pane
+			root.setFitToWidth(true);		
+			// Allow ScrollPane to be pannable
+			root.setPannable(true);			
+			// get CSS for styling information
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			// Set the Scene on the Stage
+			primaryStage.setScene(scene);	
 			
-			primaryStage.setScene(scene);	// Set the Scence on the Stage
-			
-			
-			
-			
-			
-			Button newFood = new Button("+ New Food");
-			Label topLabel = new Label("Meal Planner");
-			Label centerLabel = new Label("Details");
-			
-			BorderPane top = new BorderPane(topLabel);
-			BorderPane center = new BorderPane(centerLabel);
-			
-			
-			boarderPane.setTop(top);
-			boarderPane.setCenter(center);
-			
-			BorderPane.setAlignment(centerLabel, Pos.TOP_LEFT); 
-			
-
 			/*
-			 * FOOD PANE 
+			 * Create GUI Objects
 			 */
-			VBox foodPane = new VBox(10.0); //gives vertical spacing between 
 			
-			foodPane.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.27);
-			foodPane.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
-			foodPane.setPadding(new Insets(0,0,0,10));
-			foodPane.setPrefWidth(SCREEN_WIDTH / 4);
+			Label progNameLabel = new Label("Meal Planner"); // Name of program (top pane)
+			Label displayPaneLabel = new Label("Details");	 // Heading for display (center pane)
+			BorderPane topBPane = new BorderPane(progNameLabel); // BPane for top of GUI
+			BorderPane centerBPane = new BorderPane(displayPaneLabel); // BPane for center of GUI
 			
+			// Set nested panes in main BoarderPane
+			boarderPane.setTop(topBPane);
+			boarderPane.setCenter(centerBPane);
 			
+			// Place "Details" Heading at Top-Left of center section of main BPane
+			BorderPane.setAlignment(displayPaneLabel, Pos.TOP_LEFT); 
+		
+			/*
+			 * Food Pane (left section of main BoarderPane)
+			 */
 			
-			TextField queryFood = new TextField("Search for a food...");
+			VBox foodPaneVBox = new VBox(10.0); // VBox to hold food pane GUI objects
 			
-			ListView<String> foodList = new ListView<String>();
-			foodList.prefWidthProperty().set(SCREEN_WIDTH/4.2);
-			foodList.setPrefHeight(SCREEN_HEIGHT/8);
+			// Set Width of foodPaneVBox to 25% of screen width
+			foodPaneVBox.setPrefWidth(SCREEN_WIDTH / 4);
+			// Place foodPaneVBox at Top-Left of left section of main BPane
+			foodPaneVBox.setAlignment(Pos.TOP_LEFT);
+			// Set padding of foodPaneVBox along left side
+			foodPaneVBox.setPadding(new Insets(0,0,0,10));
+			 
+			Button newFoodButton = new Button("+ New Food"); // Button for adding food to list
+			TextField queryFoodField = new TextField("Search for a food..."); // Food query field
+			ListView<String> foodListView = new ListView<String>(); // Filtered list of cur foods
 			
-
-			Label selectedFoods = new Label("Displaying 0 of 0 foods"); 
+			// Set Width of foodListView to ~24% of the screen width
+			foodListView.prefWidthProperty().set(SCREEN_WIDTH/4.2);
+			// Set Height of foodListView to ~14% of screen height
+			foodListView.setPrefHeight(SCREEN_HEIGHT/7);
 			
-
+			Label dispFoodsLabel = new Label("Displaying 0 of 0 foods"); // # of total foods disp.
 			ObservableList<String> filterOptions = FXCollections.observableArrayList(
 					"Calories",
-					"Protein",
-					"Fat"
-				); 
-
+					"Fat",
+					"Carbohydrates",
+					"Fiber",
+					"Protein"
+				); // Options to filter food list by
+			
+			/*
+			 *FIXME Stopped here 
+			 */
 			ComboBox<String> filters = new ComboBox<String>(filterOptions);
 			filters.setValue("Select a filter");
 			
@@ -122,10 +126,10 @@ public class PrimaryGUI {
 			Button add = new Button("Add");
 			
 			HBox filter = new HBox(10);
-			filter.getChildren().addAll(compFilters, queryValue, add); //FIXME: queryValue and add not staying on same line??
+			filter.getChildren().addAll(compFilters, queryValue, add); 
 			
 			ListView<String> filterList = new ListView<String>(); 
-			filterList.setPrefHeight(SCREEN_HEIGHT/10);
+			filterList.setPrefHeight(SCREEN_HEIGHT/11);
 			
 			HBox buttons = new HBox(10);
 			Button edit = new Button("Edit");
@@ -140,7 +144,7 @@ public class PrimaryGUI {
 			Label foods = new Label("Foods");
 			
 			// Set GUI Objects on Food Pane
-			foodPane.getChildren().addAll(newFood, queryFood, foodList, selectedFoods, filters, 
+			foodPaneVBox.getChildren().addAll(newFoodButton, queryFoodField, foodListView, dispFoodsLabel, filters, 
 					filter, filterList, buttons, displayFood, downloadFood, foods);
 			
 			
@@ -155,12 +159,12 @@ public class PrimaryGUI {
 			
 			mealFlow.setPrefWidth(SCREEN_WIDTH / 4);
 			mealFlow.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
-			mealFlow.setPadding(new Insets(0,RIGHT_INSET,0,LEFT_INSET));
-			boarderPane.setRight(mealFlow);
+			mealFlow.setPadding(new Insets(0,0,0,10));
+			
 			TextField queryMeal = new TextField("Search for a meal...");
 			
 			ListView<String> mealList = new ListView<String>();
-			mealList.setPrefHeight(SCREEN_HEIGHT/8);
+			mealList.setPrefHeight(SCREEN_HEIGHT/7);
 //			mealList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.25);
 			mealList.prefWidthProperty().set(SCREEN_WIDTH/4.2);
 			//FIXME: event handler to foods
@@ -169,26 +173,30 @@ public class PrimaryGUI {
 			//FILTERGUI START
 			ObservableList<String> mealFilterOptions = FXCollections.observableArrayList(
 					"Calories",
-					"Protein",
-					"Fat"
-				); //FIXME:
+					"Fat",
+					"Carbohydrates",
+					"Fiber",
+					"Protein"
+				); // Options to filter food list by
 			ComboBox mealFilters = new ComboBox(mealFilterOptions);
 			mealFilters.setValue("Select a filter");
 			ObservableList<String> mealCompOptions = FXCollections.observableArrayList(
 					"=",
 					">=",
 					"<="
-				); //FIXME:
+				); 
 			ComboBox mealCompFilters = new ComboBox(mealCompOptions);
 			mealCompFilters.setValue("=");
 			TextField mealQueryValue = new TextField("");
+			mealQueryValue.setPrefWidth(100);
+			
 			Button mealAdd = new Button("Add");
 			HBox mealFilter = new HBox(10);
 			mealFilter.getChildren().addAll(mealCompFilters, mealQueryValue, mealAdd); 
 			
 			ListView<String> mealFilterList = new ListView<String>();
 //			mealFilterList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.20);
-			mealFilterList.setPrefHeight(SCREEN_HEIGHT/10);
+			mealFilterList.setPrefHeight(SCREEN_HEIGHT/11);
 			HBox mealButtons = new HBox(20);
 			Button mealEdit = new Button("EDIT");
 			Button mealDelete = new Button("DELETE");
@@ -204,8 +212,9 @@ public class PrimaryGUI {
 					mealFilter, mealFilterList, mealButtons, displayMeals, empty, meals);
 			
 			
-			
-			boarderPane.setLeft(foodPane);
+			// Set Food (left) and Meal (right) pane in main BoarderPane
+			boarderPane.setLeft(foodPaneVBox);
+			boarderPane.setRight(mealFlow);
 			
 			
 			// Set IDs for application.css to use for formatting
@@ -214,10 +223,10 @@ public class PrimaryGUI {
 			meals.setId("meals");
 			mealFlow.setId("right");
 			foods.setId("foods");
-			foodPane.setId("left");
-			centerLabel.setId("centerLabel");
-			top.setId("top");
-			center.setId("center");
+			foodPaneVBox.setId("left");
+			displayPaneLabel.setId("centerLabel");
+			topBPane.setId("top");
+			centerBPane.setId("center");
 			
 			primaryStage.show();
 			
