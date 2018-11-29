@@ -34,7 +34,9 @@ public class PrimaryGUI {
 	public PrimaryGUI(FoodData foodData, Stage primaryStage) {
 		try {
 			BorderPane root = new BorderPane();
+			root.setId("root");
 			ScrollPane scrollPane = new ScrollPane();
+			scrollPane.setId("scrollPane");
 			Scene scene = new Scene(scrollPane, SCREEN_WIDTH, SCREEN_HEIGHT);
 //			Scene scene = new Scene(root,
 //					Screen.getPrimary().getVisualBounds().getWidth(),
