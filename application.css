@@ -2,17 +2,32 @@
 
 .root {
 	/*-fx-background-color: #00FF7F;*/
-	-fx-background-image:url("../images/grocerystore1.JPG");
+	-fx-background-image:url("../images/background1.JPG");
 	-fx-background-position:center;
-	-fx-background-size:contain;
+	-fx-background-size:stretch;
+}
+
+#center, #left, #right {
+	-fx-background-color:aquamarine;
+	-fx-background-insets:1em;
+	-fx-padding:2em;
+	-fx-border-color:black;
+	-fx-border-style:solid;
+	-fx-border-width:0.5em;
 }
 
 #top {
-	-fx-font: bold 20pt serif;
+	-fx-font: bold 3em serif;
 }
 
 #center {
-	-fx-border-color:#000000;
-	-fx-border-style:solid;
-	-fx-border-width:5px;
+	
+}
+
+#left {
+	
+}
+
+#right {
+	
 }

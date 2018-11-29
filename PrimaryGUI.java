@@ -51,6 +51,7 @@ public class PrimaryGUI {
 			BorderPane.setAlignment(centerLabel, Pos.TOP_LEFT); //FIXME: fix left and right borderpane boundaries
 			
 			FlowPane flow = new FlowPane(Orientation.VERTICAL, 0, 10); //gives vertical spacing between 
+			flow.setId("left");//ID for CSS
 			flow.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.27);
 			flow.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
 			flow.setPadding(new Insets(0,20,0,10));
@@ -109,6 +110,7 @@ public class PrimaryGUI {
 			Button newMeal = new Button("+ New Meal");
 			
 			FlowPane mealFlow = new FlowPane(Orientation.VERTICAL, 0, 10); //gives vertical spacing between
+			mealFlow.setId("right");
 			mealFlow.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.27);
 			mealFlow.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
 			mealFlow.setPadding(new Insets(0,0,0,10));
