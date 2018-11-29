@@ -27,109 +27,136 @@ public class PrimaryGUI {
 	//	public FoodItemAddForm foodAddForm;
 	private static final double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth(); 
 	private static final double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getWidth();
-	private static final double LEFT_INSET = 10;
-	private static final double RIGHT_INSET = 0;
+	private static final double LEFT_INSET = 10;	// Left Insets for formatting GUI Elements
+	private static final double RIGHT_INSET = 0;	// Right Insets for formatting GUI Elements
+	private static final double TOP_INSET = 0;		// Top Insets for formatting GUI Elements
+	private static final double BOTTOM_INSET = 0;	// Bottom Insets for formatting GUI Elements
 	
-	
+	/**
+	 * Handles Primary GUI for Meal Planner program. Single stage with single scene that has
+	 * three main panes. First pane on left-hand side of screen is "Food Pane". Food Pane allows
+	 * for user to load, add, remove, filter and save food lists. The second pane in the middle
+	 * of the screen is "Details Pane". Details Pane displays output information to user. 
+	 * The third pane on the right-hand side of the screen is the "Meal Pane". Meal pane allows
+	 * users to create, remove, and view meals that are comprised of foods available in the
+	 * food list.
+	 * @param foodData - all of food items
+	 * @param primaryStage - primaryStage that contains primary scene
+	 */
 	public PrimaryGUI(FoodData foodData, Stage primaryStage) {
 		try {
-			BorderPane root = new BorderPane();
-			root.setId("root");
-			ScrollPane scrollPane = new ScrollPane();
-			scrollPane.setId("scrollPane");
-			Scene scene = new Scene(scrollPane, SCREEN_WIDTH, SCREEN_HEIGHT);
-//			Scene scene = new Scene(root,
-//					Screen.getPrimary().getVisualBounds().getWidth(),
-//					Screen.getPrimary().getVisualBounds().getHeight());
-					//Bases sizing off of screen size.
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm()); //FIXME: Alex's
-			primaryStage.setScene(scene);
-			primaryStage.show();
+			
+			
+			ScrollPane root = new ScrollPane(); 		// Primary Pane for GUI, allows scrolling
+			BorderPane boarderPane = new BorderPane();	// Structure for visual display	
+			Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT);
+			
+			root.setContent(boarderPane);	// Set BoarderPane on ScrollPane
+			root.setFitToWidth(true);		// Fit contents of ScrollPane to width of pane
+			root.setPannable(true);			// Allow ScrollPane to be pannable
+			
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			primaryStage.setScene(scene);	// Set the Scence on the Stage
+			
+			
+			
+			
 			
 			Button newFood = new Button("+ New Food");
 			Label topLabel = new Label("Meal Planner");
-			
 			Label centerLabel = new Label("Details");
-			centerLabel.setId("centerLabel");
+			
 			BorderPane top = new BorderPane(topLabel);
-			top.setId("top");
 			BorderPane center = new BorderPane(centerLabel);
-			center.setId("center");
 			
-			root.setTop(top);
-//			root.setBottom(bottom);
-			root.setCenter(center);
-			BorderPane.setAlignment(centerLabel, Pos.TOP_LEFT); //FIXME: fix left and right borderpane boundaries
+			
+			boarderPane.setTop(top);
+			boarderPane.setCenter(center);
+			
+			BorderPane.setAlignment(centerLabel, Pos.TOP_LEFT); 
 			
 
-			VBox flow = new VBox(10.0); //gives vertical spacing between 
-			flow.setId("left");//ID for CSS
-			flow.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.27);
-
-			flow.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
-			flow.setPadding(new Insets(0,RIGHT_INSET,0,LEFT_INSET));
-			flow.setPrefWidth(SCREEN_WIDTH / 4);
-			root.setLeft(flow);
+			/*
+			 * FOOD PANE 
+			 */
+			VBox foodPane = new VBox(10.0); //gives vertical spacing between 
+			
+			foodPane.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.27);
+			foodPane.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
+			foodPane.setPadding(new Insets(0,0,0,10));
+			foodPane.setPrefWidth(SCREEN_WIDTH / 4);
+			
+			
+			
 			TextField queryFood = new TextField("Search for a food...");
 			
 			ListView<String> foodList = new ListView<String>();
 			foodList.prefWidthProperty().set(SCREEN_WIDTH/4.2);
-//			foodList.prefWidthProperty().bind(flow.widthProperty());
 			foodList.setPrefHeight(SCREEN_HEIGHT/8);
-			//FIXME: event handler to foods
-			Label selectedFoods = new Label("Displaying 0 of 0 foods"); //number of foods out of total after filter
 			
-			//FILTERGUI START
+
+			Label selectedFoods = new Label("Displaying 0 of 0 foods"); 
+			
+
 			ObservableList<String> filterOptions = FXCollections.observableArrayList(
 					"Calories",
 					"Protein",
 					"Fat"
-				); //FIXME:
-			ComboBox filters = new ComboBox(filterOptions);
+				); 
+
+			ComboBox<String> filters = new ComboBox<String>(filterOptions);
 			filters.setValue("Select a filter");
+			
 			ObservableList<String> compOptions = FXCollections.observableArrayList(
 					"=",
 					">=",
 					"<="
-				); //FIXME:
-			ComboBox compFilters = new ComboBox(compOptions);
+				);
+			ComboBox<String> compFilters = new ComboBox<String>(compOptions);
 			compFilters.setValue("=");
+			
 			TextField queryValue = new TextField("");
+			queryValue.setPrefWidth(100);
+			
 			Button add = new Button("Add");
+			
 			HBox filter = new HBox(10);
 			filter.getChildren().addAll(compFilters, queryValue, add); //FIXME: queryValue and add not staying on same line??
 			
 			ListView<String> filterList = new ListView<String>(); 
-			//filterList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.20);
 			filterList.setPrefHeight(SCREEN_HEIGHT/10);
-			HBox buttons = new HBox(20);
-			Button edit = new Button("EDIT");
-			Button delete = new Button("DELETE");
+			
+			HBox buttons = new HBox(10);
+			Button edit = new Button("Edit");
+			Button delete = new Button("Delete");
+			
 			buttons.getChildren().addAll(edit, delete);
+			
 			//FILTERGUI END
 			
 			Button displayFood = new Button("Display Food");
 			Button downloadFood = new Button("Download Food List");
 			Label foods = new Label("Foods");
-			foods.setId("foods");
 			
-//			ObservableList<String> items = FXCollections.observableArrayList (); //MILESTONE 3 READ IN FROM FOODDATA
-//			List.setItems(items);
-			flow.getChildren().addAll(newFood, queryFood, foodList, selectedFoods, filters, 
+			// Set GUI Objects on Food Pane
+			foodPane.getChildren().addAll(newFood, queryFood, foodList, selectedFoods, filters, 
 					filter, filterList, buttons, displayFood, downloadFood, foods);
 			
 			
-			//MEAL
+			/**
+			 * Meal Pane
+			 */
 
 			Button newMeal = new Button("+ New Meal");
 			
 
 			VBox mealFlow = new VBox(10.0); //gives vertical spacing between
-			mealFlow.setId("right");
+			
 			mealFlow.setPrefWidth(SCREEN_WIDTH / 4);
 			mealFlow.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
 			mealFlow.setPadding(new Insets(0,RIGHT_INSET,0,LEFT_INSET));
-			root.setRight(mealFlow);
+			boarderPane.setRight(mealFlow);
 			TextField queryMeal = new TextField("Search for a meal...");
 			
 			ListView<String> mealList = new ListView<String>();
@@ -170,15 +197,30 @@ public class PrimaryGUI {
 			
 			Button displayMeals = new Button("Display Meals");
 			Label meals = new Label("Meals");
-			meals.setId("meals");
+			
 			Label empty = new Label(""); //FIXME is this ok?
 			
 			mealFlow.getChildren().addAll(newMeal, queryMeal, mealList, selectedMeals, mealFilters,
 					mealFilter, mealFilterList, mealButtons, displayMeals, empty, meals);
 			
-			scrollPane.setContent(root);
-			scrollPane.setFitToWidth(true);
-			scrollPane.setPannable(true);
+			
+			
+			boarderPane.setLeft(foodPane);
+			
+			
+			// Set IDs for application.css to use for formatting
+			boarderPane.setId("root");
+			root.setId("scrollPane");
+			meals.setId("meals");
+			mealFlow.setId("right");
+			foods.setId("foods");
+			foodPane.setId("left");
+			centerLabel.setId("centerLabel");
+			top.setId("top");
+			center.setId("center");
+			
+			primaryStage.show();
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
