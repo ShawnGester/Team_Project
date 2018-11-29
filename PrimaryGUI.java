@@ -22,7 +22,11 @@ import javafx.stage.Stage;
 
 public class PrimaryGUI {
 	public FoodData foodData;
-//	public FoodItemAddForm foodAddForm;
+	//	public FoodItemAddForm foodAddForm;
+	private static final double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth(); 
+	private static final double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getWidth();
+	private static final double LEFT_INSET = 10;
+	private static final double RIGHT_INSET = 0;
 	
 	
 	public PrimaryGUI(FoodData foodData, Stage primaryStage) {
@@ -51,16 +55,18 @@ public class PrimaryGUI {
 			BorderPane.setAlignment(centerLabel, Pos.TOP_LEFT); //FIXME: fix left and right borderpane boundaries
 			
 			FlowPane flow = new FlowPane(Orientation.VERTICAL, 0, 10); //gives vertical spacing between 
-			flow.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.27);
+			
 			flow.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
-			flow.setPadding(new Insets(0,20,0,10));
+			flow.setPadding(new Insets(0,RIGHT_INSET,0,LEFT_INSET));
+			flow.setPrefWidth(SCREEN_WIDTH / 4);
 			root.setLeft(flow);
 			flow.setColumnHalignment(HPos.LEFT); // align labels on left
 			TextField queryFood = new TextField("Search for a food...");
 			
 			ListView<String> foodList = new ListView<String>();
-//			foodList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.25);
-			foodList.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.35);
+			foodList.prefWidthProperty().set(SCREEN_WIDTH/4.2);
+//			foodList.prefWidthProperty().bind(flow.widthProperty());
+			foodList.setPrefHeight(SCREEN_HEIGHT/6);
 			//FIXME: event handler to foods
 			Label selectedFoods = new Label("Displaying 0 of 0 foods"); //number of foods out of total after filter
 			
@@ -85,8 +91,8 @@ public class PrimaryGUI {
 			filter.getChildren().addAll(compFilters, queryValue, add); //FIXME: queryValue and add not staying on same line??
 			
 			ListView<String> filterList = new ListView<String>(); 
-			filterList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.20);
-			filterList.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() * 0.25);
+			//filterList.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.20);
+			filterList.setPrefHeight(SCREEN_HEIGHT/10);
 			HBox buttons = new HBox(20);
 			Button edit = new Button("EDIT");
 			Button delete = new Button("DELETE");
