@@ -5,10 +5,6 @@
 	-fx-font-family: "Arial";
 }
 
-#scrollPane {
-	
-}
-
 #center, #left, #right {
 	-fx-background-color:#00FF99;
 	-fx-background-insets:1em;
@@ -16,26 +12,20 @@
 	-fx-border-color:black;
 	-fx-border-style:solid;
 	-fx-border-width:0.5em;
+	-fx-font-size:1.3em;
+}
+
+#foods, #centerLabel, #meals {
+	-fx-font-size:2em;
+	-fx-font-weight:bold;
 }
 
 #top {
 	-fx-padding:0.8em;
 	-fx-font: bold 3em "Arial";
 	-fx-background-image:url("../images/shoppingcart1.png");
-	-fx-background-position:36.5em;
+	-fx-background-position:37%;
 	-fx-background-size:contain;
 	-fx-background-repeat:no-repeat;
-	
-}
-
-#center {
-	
-}
-
-#left {
-	
-}
-
-#right {
 	
 }
