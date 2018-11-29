@@ -11,11 +11,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -32,9 +34,11 @@ public class PrimaryGUI {
 	public PrimaryGUI(FoodData foodData, Stage primaryStage) {
 		try {
 			BorderPane root = new BorderPane();
-			Scene scene = new Scene(root,
-					Screen.getPrimary().getVisualBounds().getWidth(),
-					Screen.getPrimary().getVisualBounds().getHeight());
+			ScrollPane scrollPane = new ScrollPane();
+			Scene scene = new Scene(scrollPane, SCREEN_WIDTH, SCREEN_HEIGHT);
+//			Scene scene = new Scene(root,
+//					Screen.getPrimary().getVisualBounds().getWidth(),
+//					Screen.getPrimary().getVisualBounds().getHeight());
 					//Bases sizing off of screen size.
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm()); //FIXME: Alex's
 			primaryStage.setScene(scene);
@@ -54,7 +58,7 @@ public class PrimaryGUI {
 			root.setCenter(center);
 			BorderPane.setAlignment(centerLabel, Pos.TOP_LEFT); //FIXME: fix left and right borderpane boundaries
 			
-			FlowPane flow = new FlowPane(Orientation.VERTICAL, 0, 10); //gives vertical spacing between 
+			VBox flow = new VBox(10); //gives vertical spacing between 
 			flow.setId("left");//ID for CSS
 			flow.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * 0.27);
 
@@ -62,7 +66,6 @@ public class PrimaryGUI {
 			flow.setPadding(new Insets(0,RIGHT_INSET,0,LEFT_INSET));
 			flow.setPrefWidth(SCREEN_WIDTH / 4);
 			root.setLeft(flow);
-			flow.setColumnHalignment(HPos.LEFT); // align labels on left
 			TextField queryFood = new TextField("Search for a food...");
 			
 			ListView<String> foodList = new ListView<String>();
@@ -116,13 +119,12 @@ public class PrimaryGUI {
 
 			Button newMeal = new Button("+ New Meal");
 			
-			FlowPane mealFlow = new FlowPane(Orientation.VERTICAL, 0, 10); //gives vertical spacing between
+			VBox mealFlow = new VBox(10); //gives vertical spacing between
 			mealFlow.setId("right");
 			mealFlow.setPrefWidth(SCREEN_WIDTH / 4);
 			mealFlow.setAlignment(Pos.TOP_LEFT); //left aligns all members of flow pane
 			mealFlow.setPadding(new Insets(0,RIGHT_INSET,0,LEFT_INSET));
 			root.setRight(mealFlow);
-			mealFlow.setColumnHalignment(HPos.LEFT); // align labels on left
 			TextField queryMeal = new TextField("Search for a meal...");
 			
 			ListView<String> mealList = new ListView<String>();
@@ -168,6 +170,9 @@ public class PrimaryGUI {
 			mealFlow.getChildren().addAll(newMeal, queryMeal, mealList, selectedMeals, mealFilters,
 					mealFilter, mealFilterList, mealButtons, displayMeals, empty, meals);
 			
+			scrollPane.setContent(root);
+			scrollPane.setFitToWidth(true);
+			scrollPane.setPannable(true);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
