@@ -69,6 +69,7 @@ public class PrimaryGUI {
 			 */
 			
 			Label progNameLabel = new Label("Meal Planner"); // Name of program (top pane)
+			progNameLabel.setId("title");
 			Label displayPaneLabel = new Label("Details");	 // Heading for display (center pane)
 			BorderPane topBPane = new BorderPane(progNameLabel); // BPane for top of GUI
 			BorderPane centerBPane = new BorderPane(displayPaneLabel); // BPane for center of GUI
