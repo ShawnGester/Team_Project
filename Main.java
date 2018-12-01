@@ -16,6 +16,10 @@ import javafx.scene.text.Font;
 /**
  * Main class that runs JavaFX program.
  * @author Cole Thomson
+ * @author Shawn Ge
+ * @author Alex Fusco
+ * @author Danica Fliss
+ * @author Leah Witt
  *
  */
 public class Main extends Application {

@@ -7,7 +7,6 @@
 
 #center, #left, #right {
 	-fx-background-color:aquamarine;
-	/*-fx-background-color:#00FF99;*/
 	-fx-background-insets:1em;
 	-fx-padding:2em;
 	-fx-border-color:rgb(128,128,192);

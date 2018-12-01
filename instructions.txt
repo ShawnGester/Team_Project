@@ -1,0 +1,2 @@
+Have a file called images outside of the folder containing the java files so that the file path for accessing the images is set up correctly.
+The application.css file should be in the same folder as the Java files.

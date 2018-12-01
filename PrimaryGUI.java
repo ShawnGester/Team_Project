@@ -26,6 +26,10 @@ import javafx.stage.Stage;
  * Represents the Primary GUI that the user will interact with. Initializes all GUI objects in 
  * constructor.
  * @author Cole Thomosn
+ * @author Shawn Ge
+ * @author Alex Fusco
+ * @author Danica Fliss
+ * @author Leah Witt
  *
  */
 public class PrimaryGUI {
