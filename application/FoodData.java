@@ -21,7 +21,8 @@ public class FoodData implements FoodDataADT<FoodItem> {
      * Public constructor
      */
     public FoodData() {
-        // TODO : Complete
+    	foodItemList = new List<FoodItem>();
+        indexes = new HashMap<String, BPTree<Double, FoodItem>>();
     }
     
     
