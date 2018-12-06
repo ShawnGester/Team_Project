@@ -83,6 +83,7 @@ public class Meal {
 		
 		for(int i=0; i<name.size(); i++){
 			this.nutrients.put(name.get(i), values.get(i));
+			//testing
 		}
 	}
 	
