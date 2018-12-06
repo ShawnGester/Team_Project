@@ -21,7 +21,7 @@ public class BPTreeTest {
 		
 		//Try with argument 2;
 		try {
-			BPTree<Integer, Object> test = new BPTree<>(2);
+			BPTree<Integer, Object> test = new BPTree<Integer, Object>(2);
 			passed = false;
 			fail("Constructor did not throw IllgalArgumentException with argument \"2\".");
 		} catch(IllegalArgumentException e) {
@@ -33,7 +33,7 @@ public class BPTreeTest {
 		
 		//Try with argument 0;
 		try {
-			BPTree<Integer, Object> test = new BPTree<>(0);
+			BPTree<Integer, Object> test = new BPTree<Integer, Object>(0);
 			passed = false;
 			fail("Constructor did not throw IllgalArgumentException with argument \"0\".");
 		} catch(IllegalArgumentException e) {
@@ -45,7 +45,7 @@ public class BPTreeTest {
 				
 		//Try with argument -1;
 		try {
-			BPTree<Integer, Object> test = new BPTree<>(-1);
+			BPTree<Integer, Object> test = new BPTree<Integer, Object>(-1);
 			passed = false;
 			fail("Constructor did not throw IllgalArgumentException with argument \"-1\".");
 		} catch(IllegalArgumentException e) {
@@ -56,7 +56,7 @@ public class BPTreeTest {
 		}
 		
 		try {
-			BPTree<Integer, Object> test = new BPTree<>(3);
+			BPTree<Integer, Object> test = new BPTree<Integer, Object>(3);
 			//Success.
 		} catch(Exception e) {
 			passed = false;
@@ -81,8 +81,8 @@ public class BPTreeTest {
 		names[9] = "Flex Ausco";
 		
 		try {
-			BPTree<Integer, String> tree = new BPTree<>(3);
-			ArrayList<Integer> list = new ArrayList<>();
+			BPTree<Integer, String> tree = new BPTree<Integer, String>(3);
+			ArrayList<Integer> list = new ArrayList<Integer>();
 			Random rndgen = new Random();
 			int index;
 			while(list.size() < 10) {
@@ -127,8 +127,8 @@ public class BPTreeTest {
 		names[9] = "Flex Ausco";
 		
 		try {
-			BPTree<Integer, String> tree = new BPTree<>(3);
-			ArrayList<Integer> list = new ArrayList<>();
+			BPTree<Integer, String> tree = new BPTree<Integer, String>(3);
+			ArrayList<Integer> list = new ArrayList<Integer>();
 			Random rndgen = new Random();
 			int index;
 			//Inserts into tree in random order.
