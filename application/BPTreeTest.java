@@ -131,7 +131,7 @@ public class BPTreeTest {
 			ArrayList<Integer> list = new ArrayList<Integer>();
 			Random rndgen = new Random();
 			int index;
-			//Inserts into tree in random order.
+			//Inserts into tree in random order
 			while(list.size() < 10) {
 				index = rndgen.nextInt(10);
 				if(!list.contains((Integer)index)) {
