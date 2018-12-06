@@ -1,3 +1,4 @@
+package application;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,7 @@ public class Meal {
 	private List<FoodItem> food;
 	
 	/**
-	 * 
+	 * Constructor
 	 * @param name
 	 * @param food
 	 */
