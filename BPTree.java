@@ -327,7 +327,8 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         	ArrayList<V> list = new ArrayList<V>();
         	if(comparator.equals("<=")) {
         		int i = 0;
-        		while((key.compareTo(this.keys.get(i))) >= 0 && (i < this.keys.size())) {
+        		//If i wasn't checked first, an ArrayIndexOutOfBoundsException could be thrown.
+        		while((i < this.keys.size()) && (key.compareTo(this.keys.get(i)) >= 0)) {
         			i++;
         		}
         		return this.children.get(i).rangeSearch(key, comparator);
@@ -340,7 +341,8 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         		return this.children.get(i + 1).rangeSearch(key, comparator);
         	} else if(comparator.equals("==")){
         		int i = 0;
-        		while((key.compareTo(this.keys.get(i)) >= 0) && (i < this.keys.size())) {
+        		//If i wasn't checked first, an ArrayIndexOutOfBoundsException could be thrown.
+        		while((i < this.keys.size()) && (key.compareTo(this.keys.get(i)) >= 0)) {
         			i++;
         		}
         		return this.children.get(i).rangeSearch(key, comparator);
