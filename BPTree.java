@@ -229,18 +229,21 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         	//If the child is not a leaf node, then the method is recursively calling itself.
         	//However, it's really not recursive, because it's a new instance.
         	Node node = null;//Node will contain key that may need to be added if there's splitting.
-        	if(key.compareTo(this.keys.get(0)) < 0) {//Belongs in first branch.
+        	
+        	if(key.compareTo(this.keys.get(0)) < 0) {//Belongs in first child.
         		this.children.get(0).insert(key, value);
         		if(this.children.get(0).isOverflow()) {
         			node = this.children.get(0).split();
         		}
-        	} else if(key.compareTo(this.keys.get(this.keys.size())) > 0) {//Belongs in last branch.
+        	} else if(key.compareTo(this.keys.get(this.keys.size() - 1)) >= 0) {
+        		//Belongs in last child.
         		this.children.get(this.keys.size()).insert(key, value);
         		if(this.children.get(this.keys.size()).isOverflow()) {
         			node = this.children.get(this.keys.size()).split();
         		}
         	} else {//Belongs somewhere in between.
-        		for(int i = 0; i < this.keys.size(); i++) {
+        		int i = 0;
+        		for(i = 0; i < this.keys.size(); i++) {
         			if(key.compareTo(this.keys.get(i)) < 0) {
         				this.children.get(i).insert(key, value);
         				if(this.children.get(i).isOverflow()) {
@@ -256,7 +259,7 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         		K newKey = node.keys.get(0);
         		if(newKey.compareTo(this.keys.get(0)) < 0) {//Belongs in beginning.
         			this.keys.add(0, newKey);//Adds new key to node.
-            	} else if(newKey.compareTo(this.keys.get(this.keys.size())) > 0) {
+            	} else if(newKey.compareTo(this.keys.get(this.keys.size() - 1)) > 0) {
             		//Belongs at end.
             		this.keys.add(newKey);//Adds new key to node.
             	} else {//Belongs somewhere in between.
@@ -381,8 +384,7 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
          */
         void insert(K key, V value) {
         	if((this.keys.size() == 0) 
-        			|| (key.compareTo(this.keys.get(this.keys.size() - 1)) > 0) 
-        			|| (this.keys.size() == 1)) {
+        			|| (key.compareTo(this.keys.get(this.keys.size() - 1)) >= 0)) {
         		//Belongs in last index, or nothing has been added yet.
         		this.keys.add(key);
         		this.values.add(value);
@@ -393,8 +395,7 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         	} else {
         		//Belongs somewhere in between.
         		for(int i = 1; i < this.keys.size() - 1; i++) {
-        			if((key.compareTo(this.keys.get(0)) > 0) 
-        					&& (key.compareTo(this.keys.get(i)) < 0)) {
+        			if(key.compareTo(this.keys.get(i)) < 0) {//Is less than key at index i.
         				this.keys.add(i, key);
         				this.values.add(i, value);
         				return;

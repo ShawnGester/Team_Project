@@ -89,24 +89,27 @@ public class BPTreeTest {
 				index = rndgen.nextInt(10);
 				if(!list.contains((Integer)index)) {
 					tree.insert(index, new String(names[index]));
+					list.add((Integer)index);
 				}
 			}
 			
-			String expOut = "{";
+			String expOut = "{[";
 			for(int i = 0; i < names.length; i++) {//FIXME:This may be wrong.
 				expOut += names[i];
 				if(i < names.length - 1) {
 					expOut += ", ";
 				} else {
-					expOut += "}";
+					expOut += "]}";
 				}
 			}
 			passed &= tree.toString().equals(expOut);
 			if(!passed) {
+				//System.out.println(tree);//FIXME
 				fail("toString method did not produce expected result.");
 			}
 			assertTrue(passed);
 		} catch(Exception e) {
+			e.printStackTrace();//FIXME
 			fail("Unexpectedly threw " + e.getClass());
 		}
 	}
@@ -136,6 +139,7 @@ public class BPTreeTest {
 				index = rndgen.nextInt(10);
 				if(!list.contains((Integer)index)) {
 					tree.insert(index, new String(names[index]));
+					list.add((Integer)index);
 				}
 			}
 			
@@ -143,6 +147,7 @@ public class BPTreeTest {
 			List<String> rangeList = tree.rangeSearch(5, "<=");
 			if(rangeList.size() != 6) {
 				passed = false;
+				//System.out.println(tree);//FIXME
 				fail("Range search did not return correct number of values.");
 			}
 			
@@ -155,6 +160,7 @@ public class BPTreeTest {
 			rangeList = tree.rangeSearch(5, ">=");
 			if(rangeList.size() != 5) {
 				passed = false;
+				//System.out.println(tree);//FIXME
 				fail("Range search did not return correct number of values.");
 			}
 			
@@ -167,6 +173,7 @@ public class BPTreeTest {
 			rangeList = tree.rangeSearch(5, "==");
 			if(rangeList.size() != 1) {
 				passed = false;
+				//System.out.println(tree);//FIXME
 				fail("Range search did not return correct number of values.");
 			}
 			
@@ -176,6 +183,7 @@ public class BPTreeTest {
 			
 		} catch(Exception e) {
 			passed = false;
+			e.printStackTrace();//FIXME
 			fail("Unexpectedly threw " + e.getClass());
 		}
 	}
@@ -186,6 +194,7 @@ public class BPTreeTest {
 			//Main method will run some basic tests.
 			BPTree.main(null);
 		} catch(Exception e) {
+			e.printStackTrace();//FIXME
 			fail("Unexpectedly threw " + e.getClass());
 		}
 		assertTrue(true);
