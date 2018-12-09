@@ -13,9 +13,6 @@ public class Meal {
 	//name of meal
 	private String name;
 	
-	//id of meal item
-	private String id;
-	
 	//Map of nutrients and value
 	private HashMap<String, Double> nutrients;
 	
@@ -29,8 +26,8 @@ public class Meal {
 	 */
 	public Meal(String name, List<FoodItem> food){
 		this.name = name;
-		this.food = food;
-		calcID();
+		this.food = food; //worried about shallow copies here
+		nutrients = new HashMap<String, Double>();
 		sumNutrients();
 	}
 	
@@ -40,21 +37,6 @@ public class Meal {
 	 */
 	public String getName(){
 		return name;
-	}
-	
-	/**
-	 * Gets unique id of the meal
-	 * @return
-	 */
-	public String getID(){
-		return id;
-	}
-	
-	/**
-	 * creates an id for the specific meal
-	 */
-	private void calcID(){
-		//does it need an id?
 	}
 	
 	/**
