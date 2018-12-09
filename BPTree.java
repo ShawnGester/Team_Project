@@ -203,10 +203,6 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
 				//Works down internal nodes. Terminates when a leaf node is reached.
 				node = ((InternalNode)node).children.get(0);
 			}
-			if(node.getClass().getName().equals("LeafNode")) {
-				//FIXME: This may be unnecessary, but could make debugging easier.
-				System.out.println("Error: Bottom node was not a leaf node.");
-			}
 			return node.getFirstLeafKey();
 			//Last node should be a leaf node. Will return first leaf node.
         }
@@ -323,12 +319,12 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         		}
         		return this.children.get(i).rangeSearch(key, comparator);
         	} else if(comparator.equals(">=")) {
-        		int i = this.keys.size() - 1;
+        		int i = 0;
         		//If i wasn't checked first, an ArrayIndexOutOfBoundsException could be thrown.
-				while ((i >= 0) && (key.compareTo(this.keys.get(i)) < 0)) {
-					i--;
+				while ((i < this.keys.size()) && (key.compareTo(this.keys.get(i)) >= 0)) {
+					i++;
 				}
-        		return this.children.get(i + 1).rangeSearch(key, comparator);
+        		return this.children.get(i).rangeSearch(key, comparator);
         	} else if(comparator.equals("==")){
         		int i = 0;
         		//If i wasn't checked first, an ArrayIndexOutOfBoundsException could be thrown.
@@ -434,7 +430,10 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         	}
         	
         	//Configure leaf node in linked list.
-        	leftChild.previous = this.previous;
+        	if(this.previous != null) {
+        		this.previous.next = leftChild;
+            	leftChild.previous = this.previous;
+        	}
         	leftChild.next = this;
         	this.previous = leftChild;
         	
@@ -464,7 +463,7 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         		}
         		
         		//Adds items from this node to list.
-        		for(i -= 1; (i >= 0) && (i != -1); i--) {
+        		for(i -= 1; i >= 0; i--) {
         			list.add(this.values.get(i));
         		}
         		
@@ -480,14 +479,14 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         	} else if(comparator.equals(">=")) {
         		
         		//Finds where list should start.
-        		for(i = 0; i < this.keys.size(); i++) {
-        			if(this.keys.get(i).compareTo(key) < 0) {
+        		for(i = this.keys.size() - 1; i >= 0; i--) {
+        			if(key.compareTo(this.keys.get(i)) > 0) {
         				break;
         			}
         		}
         		
         		//Adds items from this node to list.
-        		for(i -= 1; (i < this.values.size()) && (i != -1); i++) {
+        		for(i += 1; i < this.values.size(); i++) {
         			list.add(this.values.get(i));
         		}
         		

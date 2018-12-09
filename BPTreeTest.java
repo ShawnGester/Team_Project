@@ -160,7 +160,7 @@ public class BPTreeTest {
 				boolean test = rangeList.contains(names[i]);
 				passed &= test;
 				if(!test) {
-					System.out.println("FAILED: Doesn't contain" + names[i]);
+					System.out.println("\nFAILED: Doesn't contain" + names[i]);
 				}
 			}
 			if(!passed) {
