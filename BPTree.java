@@ -56,8 +56,6 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
     	if(this.root.isOverflow()) {
     		this.root = this.root.split();
     	}
-    	System.out.println("Attempted to insert key: " + key);//FIXME
-    	System.out.println("\n" + this);//FIXME
     }
     
     
@@ -211,10 +209,6 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
 			}
 			return node.getFirstLeafKey();
 			//Last node should be a leaf node. Will return first leaf node.
-			
-        	//FIXME: This program will crash if the leaf nodes are not saved as type LeafNode.
-        	//       Keep as is for now, because if the program crashes then we'll know that we
-        	//       aren't saving the types correctly.
         }
         
         
@@ -267,11 +261,10 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         		if(newKey.compareTo(this.keys.get(0)) < 0) {//Belongs in beginning.
         			this.keys.add(0, newKey);//Adds new key to node.
         			this.children.add(0, node.children.get(0));//Add child.
-            	} else if(newKey.compareTo(this.keys.get(this.keys.size() - 1)) > 0) {
+            	} else if(newKey.compareTo(this.keys.get(this.keys.size() - 1)) >= 0) {
             		//Belongs at end.
             		this.keys.add(newKey);//Adds new key to node.
-            		this.children.add(this.children.size() - 1, node.children.get(0));//Adds child.
-            		//FIXME: Check if it should really be added as second to last child.
+            		this.children.add(this.keys.size() - 1, node.children.get(0));//Adds child.
             	} else {//Belongs somewhere in between.
             		for(int i = 1; i < this.keys.size(); i++) {
             			if(newKey.compareTo(this.keys.get(i)) < 0) {
@@ -304,9 +297,9 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         	//child. If the number of children is odd, then there is one more child put in the left
         	//child.
         	for(int i = 0; i < this.children.size() / 2 + 1; i++) {
-        		leftChild.children.add(this.children.remove(i));
+        		leftChild.children.add(this.children.remove(0));
         	}
-        	//FIXME: I think I didn't handle dividing up children.
+        	
         	//Configure internal node which will be returned.
         	InternalNode parentNode = new InternalNode();
         	parentNode.keys.add(this.keys.remove(0));//Remove for internal node, get for leaf.
@@ -441,8 +434,8 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         	}
         	
         	//Configure leaf node in linked list.
-        	leftChild.next = this;
         	leftChild.previous = this.previous;
+        	leftChild.next = this;
         	this.previous = leftChild;
         	
         	//Configure internal node which will be returned.
