@@ -53,11 +53,11 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
     @Override
     public void insert(K key, V value) {
     	this.root.insert(key, value);
-    	if(this.root.isOverflow()) {//FIXME: Get this to do what it's supposed to.
+    	if(this.root.isOverflow()) {
     		this.root = this.root.split();
     	}
-    	//FIXME: Splitting probably has to be handled in here, so that the reference to the root can
-    	//       be changed.
+    	System.out.println("Attempted to insert key: " + key);//FIXME
+    	System.out.println("\n" + this);//FIXME
     }
     
     
@@ -266,20 +266,17 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         		K newKey = node.keys.get(0);
         		if(newKey.compareTo(this.keys.get(0)) < 0) {//Belongs in beginning.
         			this.keys.add(0, newKey);//Adds new key to node.
-        			//FIXME: Add child.
-        			this.children.add(0, node.children.get(0));
+        			this.children.add(0, node.children.get(0));//Add child.
             	} else if(newKey.compareTo(this.keys.get(this.keys.size() - 1)) > 0) {
             		//Belongs at end.
             		this.keys.add(newKey);//Adds new key to node.
-            		//FIXME: Add child.
-            		this.children.add(this.children.size() - 1, node.children.get(0));
+            		this.children.add(this.children.size() - 1, node.children.get(0));//Adds child.
             		//FIXME: Check if it should really be added as second to last child.
             	} else {//Belongs somewhere in between.
             		for(int i = 1; i < this.keys.size(); i++) {
             			if(newKey.compareTo(this.keys.get(i)) < 0) {
             				this.keys.add(i, newKey);//Adds new key to node.
-            				//FIXME: Add child.
-            				this.children.add(i, node.children.get(0));
+            				this.children.add(i, node.children.get(0));//Add child.
             				break;
             			}
             		}
@@ -309,7 +306,7 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         	for(int i = 0; i < this.children.size() / 2 + 1; i++) {
         		leftChild.children.add(this.children.remove(i));
         	}
-        	
+        	//FIXME: I think I didn't handle dividing up children.
         	//Configure internal node which will be returned.
         	InternalNode parentNode = new InternalNode();
         	parentNode.keys.add(this.keys.remove(0));//Remove for internal node, get for leaf.
@@ -417,19 +414,13 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         		this.values.add(0, value);
         	} else {
         		//Belongs somewhere in between.
-        		for(int i = 1; i < this.keys.size() - 1; i++) {
+        		for(int i = 1; i < this.keys.size(); i++) {
         			if(key.compareTo(this.keys.get(i)) < 0) {//Is less than key at index i.
         				this.keys.add(i, key);
         				this.values.add(i, value);
         				return;
         			}
         		}
-        	}
-        	
-        	//Splits the node if necessary.
-        	if(this.isOverflow()) {
-        		//FIXME: Splitting is not handled in the leaf nodes, and needs to somehow be taken 
-        		//       care of.
         	}
         }
         
