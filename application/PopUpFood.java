@@ -50,6 +50,7 @@ public class PopUpFood {
 		upload.setFont(new Font(20));
 		
 		TextField filePath = new TextField();
+		filePath.setFocusTraversable(false);
 		Label fileLabel = new Label("Input Filename");
 		
 		Button uploadButton = new Button("Upload");
@@ -62,6 +63,7 @@ public class PopUpFood {
 	                if(filename != null){
 	                	try{
 	                		foodData.loadFoodItems(filename);
+	                		foodWindow.hide();
 	                	}catch(Exception e){
 	                		//maybe have words show up with error message?
 	                	}
@@ -72,8 +74,10 @@ public class PopUpFood {
 		BorderPane left = new BorderPane();
 		VBox text = new VBox(10);
 		text.getChildren().addAll(fileLabel, filePath, uploadButton);
+		text.setPadding(new Insets(30,0,0,0));
 		left.setTop(upload);
 		left.setCenter(text);
+		left.setPadding(new Insets(10,20,20,20));
 		
 		food.setLeft(left);
 		BorderPane.setAlignment(left, Pos.CENTER_RIGHT);//not sure if this is working
@@ -82,7 +86,8 @@ public class PopUpFood {
 		newFood.setFont(new Font(20));
 		
 		Label foodName = new Label("Name of Food");
-		TextField foodInput = new TextField("e.g. \"Apple\"");
+		TextField foodInput = new TextField();
+		foodInput.setPromptText("e.g. \"Apple\"");
 		foodInput.setFocusTraversable(false);
 		
 		VBox nameInfo = new VBox(10);
@@ -90,18 +95,28 @@ public class PopUpFood {
 		
 		Label calories = new Label("calories");
 		TextField calorieInput = new TextField();
+		calorieInput.setPromptText("unit kcal");
+		calorieInput.setFocusTraversable(false);
 		
-		Label protein = new Label("protein in grams");
+		Label protein = new Label("protein");
 		TextField proteinInput = new TextField();
+		proteinInput.setPromptText("unit grams");
+		proteinInput.setFocusTraversable(false);
 		
-		Label carb = new Label("carbohydrates in grams");
+		Label carb = new Label("carbohydrates");
 		TextField carbInput = new TextField();
+		carbInput.setPromptText("unit grams");
+		carbInput.setFocusTraversable(false);
 		
-		Label fat = new Label("fat in grams");
+		Label fat = new Label("fat");
 		TextField fatInput = new TextField();
+		fatInput.setPromptText("unit grams");
+		fatInput.setFocusTraversable(false);
 		
-		Label fiber = new Label("fiber in grams");
+		Label fiber = new Label("fiber");
 		TextField fiberInput = new TextField();
+		fiberInput.setPromptText("unit grams");
+		fiberInput.setFocusTraversable(false);
 		
 		Button addFood = new Button("Add Food");
 		
@@ -109,6 +124,7 @@ public class PopUpFood {
             @Override
             public void handle(ActionEvent event) {
                 //How to make a food item without an id?
+            	foodWindow.hide();
             }
 	      });
 		
@@ -123,6 +139,7 @@ public class PopUpFood {
 		nutrientBox.getChildren().addAll(labels, fields);
 		
 		right.getChildren().addAll(newFood, nameInfo, nutrientBox, addFood);
+		right.setPadding(new Insets(10,20,20,20));
 		food.setRight(right);
 		
 		Scene foodScene = new Scene(food, 600, 400);
