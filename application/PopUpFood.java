@@ -4,6 +4,8 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -30,7 +32,7 @@ import javafx.stage.Stage;
 public class PopUpFood {
 	Stage foodWindow;
 	
-	public PopUpFood(){
+	public PopUpFood(FoodData foodData){
 		foodWindow = new Stage();
 		foodWindow.setTitle("Create A Food Item");
 		BorderPane food = new BorderPane();
@@ -52,6 +54,21 @@ public class PopUpFood {
 		
 		Button uploadButton = new Button("Upload");
 		
+		//load the file when upload button is pressed
+		uploadButton.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	                String filename = filePath.getAccessibleText();
+	                if(filename != null){
+	                	try{
+	                		foodData.loadFoodItems(filename);
+	                	}catch(Exception e){
+	                		//maybe have words show up with error message?
+	                	}
+	                }
+	            }
+		      });
+		
 		BorderPane left = new BorderPane();
 		VBox text = new VBox(10);
 		text.getChildren().addAll(fileLabel, filePath, uploadButton);
@@ -59,7 +76,7 @@ public class PopUpFood {
 		left.setCenter(text);
 		
 		food.setLeft(left);
-		food.setAlignment(left, Pos.CENTER_RIGHT);
+		BorderPane.setAlignment(left, Pos.CENTER_RIGHT);//not sure if this is working
 		
 		Label newFood = new Label("Add New Food to List");
 		newFood.setFont(new Font(20));
@@ -74,34 +91,26 @@ public class PopUpFood {
 		Label calories = new Label("calories");
 		TextField calorieInput = new TextField();
 		
-//		HBox calInfo = new HBox(10);
-//		calInfo.getChildren().addAll(calories, calorieInput);
-		
 		Label protein = new Label("protein in grams");
 		TextField proteinInput = new TextField();
-		
-//		HBox proteinInfo = new HBox(10);
-//		proteinInfo.getChildren().addAll(protein, proteinInput);
 		
 		Label carb = new Label("carbohydrates in grams");
 		TextField carbInput = new TextField();
 		
-//		HBox carbInfo = new HBox(10);
-//		carbInfo.getChildren().addAll(carb, carbInput);
-		
 		Label fat = new Label("fat in grams");
 		TextField fatInput = new TextField();
-		
-//		HBox fatInfo = new HBox(10);
-//		fatInfo.getChildren().addAll(fat, fatInput);
 		
 		Label fiber = new Label("fiber in grams");
 		TextField fiberInput = new TextField();
 		
-//		HBox fiberInfo = new HBox(10);
-//		fiberInfo.getChildren().addAll(fiber, fiberInput);
-		
 		Button addFood = new Button("Add Food");
+		
+		addFood.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //How to make a food item without an id?
+            }
+	      });
 		
 		VBox right = new VBox(10);		
 		VBox labels = new VBox(20);
