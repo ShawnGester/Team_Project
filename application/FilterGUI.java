@@ -50,10 +50,10 @@ public class FilterGUI {
 				"Protein"
 			); // Options to filter food list by
 		
-		ComboBox<String> foodFiltersCBox = new ComboBox<String>(filterOptions); // Filter CBox
+		ComboBox<String> filtersCBox = new ComboBox<String>(filterOptions); // Filter CBox
 		
 		// Set default value of foodFilterCBox to prompt user to select a filter
-		foodFiltersCBox.setValue("Select a filter");
+		filtersCBox.setValue("Select a filter");
 		
 		ObservableList<String> foodCompOptions = FXCollections.observableArrayList(
 				"=",
@@ -62,35 +62,41 @@ public class FilterGUI {
 			); // Types of comparisons available for filters
 		
 		// ComboBox of comparison operators to determine food filter criteria 
-		ComboBox<String> foodCompFiltersCBox = new ComboBox<String>(foodCompOptions);  
+		ComboBox<String> compFiltersCBox = new ComboBox<String>(foodCompOptions);  
 		
 		// Set default value of foodCompFiltersCBox to "="
-		foodCompFiltersCBox.setValue("=");
+		compFiltersCBox.setValue("=");
 		
-		TextField foodFilterValue = new TextField(""); // user inputs filter value
+		TextField filterValue = new TextField(""); // user inputs filter value
 		
 		// Set Width of foodFilterValue 
-		foodFilterValue.setPrefWidth(100);
+		filterValue.setPrefWidth(100);
 		
-		Button foodFilterAddButton = new Button("Add"); // Applies filter and adds to list
-		HBox foodFilterHBox = new HBox(10); // HBox to hold group of food filter GUI objects
-		ListView<String> foodFilterLView = new ListView<String>(); // list of applied filters
+		Button filterAddButton = new Button("Add"); // Applies filter and adds to list
+		HBox filterHBox = new HBox(10); // HBox to hold group of food filter GUI objects
+		ListView<String> filterLView = new ListView<String>(); // list of applied filters
 		
 		// Set Height of foodFilterLView to ~9% of screen height
-		foodFilterLView.setPrefHeight(SCREEN_HEIGHT/11);
+		filterLView.setPrefHeight(SCREEN_HEIGHT/11);
 		
 		HBox buttonsHBox = new HBox(10); // HBox to hold "Edit" and "Delete" buttons
 		Button foodEditFilterButton = new Button("Edit"); 		// Button to edit a filter
 		Button foodDeleteFilterButton = new Button("Delete"); 	// Button to delete a filter
 		
+		/**
+		 * EVENT HANDLERS
+		 */
+		
+		
+		
 		// Add food filter GUI objects to HBox
-		foodFilterHBox.getChildren().addAll(foodCompFiltersCBox, foodFilterValue, foodFilterAddButton); 
+		filterHBox.getChildren().addAll(compFiltersCBox, filterValue, filterAddButton); 
 		
 		// Add "Edit" and "Delete" buttons to HBox
 		buttonsHBox.getChildren().addAll(foodEditFilterButton, foodDeleteFilterButton);
 		
 		// Set all elements onto filter GUI to return
-		filterVBox.getChildren().addAll(foodFiltersCBox, foodFilterHBox, foodFilterLView, buttonsHBox);
+		filterVBox.getChildren().addAll(filtersCBox, filterHBox, filterLView, buttonsHBox);
 		
 		return filterVBox;
 	}
