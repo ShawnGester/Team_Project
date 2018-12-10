@@ -97,4 +97,8 @@ public class Meal {
 			return nutrients.get(name);
 		return 0;
 	}
+	
+	public FoodItem getFood(String name){
+		return null;
+	}
 }
