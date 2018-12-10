@@ -108,60 +108,18 @@ public class PrimaryGUI {
 			foodListView.setPrefHeight(SCREEN_HEIGHT/7);
 			
 			Label dispFoodsLabel = new Label("Displaying 0 of 0 foods"); // # of total foods disp.
-			ObservableList<String> filterOptions = FXCollections.observableArrayList(
-					"Calories",
-					"Fat",
-					"Carbohydrates",
-					"Fiber",
-					"Protein"
-				); // Options to filter food list by
-			
-			ComboBox<String> foodFiltersCBox = new ComboBox<String>(filterOptions); // Filter CBox
-			
-			// Set default value of foodFilterCBox to prompt user to select a filter
-			foodFiltersCBox.setValue("Select a filter");
-			
-			ObservableList<String> foodCompOptions = FXCollections.observableArrayList(
-					"=",
-					">=",
-					"<="
-				); // Types of comparisons available for filters
-			
-			// ComboBox of comparison operators to determine food filter criteria 
-			ComboBox<String> foodCompFiltersCBox = new ComboBox<String>(foodCompOptions);  
-			
-			// Set default value of foodCompFiltersCBox to "="
-			foodCompFiltersCBox.setValue("=");
-			
-			TextField foodFilterValue = new TextField(""); // user inputs filter value
-			
-			// Set Width of foodFilterValue 
-			foodFilterValue.setPrefWidth(100);
-			
-			Button foodFilterAddButton = new Button("Add"); // Applies filter and adds to list
-			HBox foodFilterHBox = new HBox(10); // HBox to hold group of food filter GUI objects
-			ListView<String> foodFilterLView = new ListView<String>(); // list of applied filters
-			
-			// Set Height of foodFilterLView to ~9% of screen height
-			foodFilterLView.setPrefHeight(SCREEN_HEIGHT/11);
-			
-			HBox buttonsHBox = new HBox(10); // HBox to hold "Edit" and "Delete" buttons
-			Button foodEditFilterButton = new Button("Edit"); 		// Button to edit a filter
-			Button foodDeleteFilterButton = new Button("Delete"); 	// Button to delete a filter
+
 			Button displayFoodButton = new Button("Display Food"); 	// Button to display food details
 			Button downloadFoodButton = new Button("Download Food List"); // download list of foods
 			Label foodPaneLabel = new Label("Foods"); // Heading for food pane (left pane)
 			
-			// Add food filter GUI objects to HBox
-			foodFilterHBox.getChildren().addAll(foodCompFiltersCBox, foodFilterValue, foodFilterAddButton); 
-			
-			// Add "Edit" and "Delete" buttons to HBox
-						buttonsHBox.getChildren().addAll(foodEditFilterButton, foodDeleteFilterButton);
+			// Creates filter section of food VBox
+			FilterGUI foodFilter = new FilterGUI("Food", SCREEN_HEIGHT, SCREEN_WIDTH);
+			VBox fFilter = foodFilter.makeFilterVBox();
 			
 			// Set GUI Objects on Food Pane
-			foodPaneVBox.getChildren().addAll(newFoodButton, queryFoodField, foodListView, dispFoodsLabel, foodFiltersCBox, 
-					foodFilterHBox, foodFilterLView, buttonsHBox, displayFoodButton, downloadFoodButton, foodPaneLabel);
-			
+			foodPaneVBox.getChildren().addAll(newFoodButton, queryFoodField, foodListView, dispFoodsLabel, fFilter,
+					displayFoodButton, downloadFoodButton, foodPaneLabel);
 			
 			/**
 			 * Meal Pane (right section of main BoarderPane)
@@ -185,59 +143,18 @@ public class PrimaryGUI {
 			mealListView.setPrefHeight(SCREEN_HEIGHT/7);
 			
 			Label dispMealsLabel = new Label("Displaying 0 of 0 meals"); // # of total meals disp.
-			ObservableList<String> filterOptions2 = FXCollections.observableArrayList(
-					"Calories",
-					"Fat",
-					"Carbohydrates",
-					"Fiber",
-					"Protein"
-				); // Options to filter meal list by
-			
-			ComboBox<String> mealFiltersCBox = new ComboBox<String>(filterOptions2); // Filter CBox
-			
-			// Set default value of foodFilterCBox to prompt user to select a filter
-			mealFiltersCBox.setValue("Select a filter");
-			
-			ObservableList<String> mealCompOptions = FXCollections.observableArrayList(
-					"=",
-					">=",
-					"<="
-				); // Types of comparisons available for filters
-			
-			// ComboBox of comparison operators to determine meal filter criteria 
-			ComboBox<String> mealCompFiltersCBox = new ComboBox<String>(mealCompOptions);  
-			
-			// Set default value of foodCompFiltersCBox to "="
-			mealCompFiltersCBox.setValue("=");
-			
-			TextField mealFilterValue = new TextField(""); // user inputs filter value
-			
-			// Set Width of mealFilterValue 
-			mealFilterValue.setPrefWidth(100);
-			
-			Button mealFilterAddButton = new Button("Add"); // Applies filter and adds to list
-			HBox mealFilterHBox = new HBox(10); // HBox to hold group of meal filter GUI objects
-			ListView<String> mealFilterLView = new ListView<String>(); // list of applied filters
-			
-			// Set Height of mealFilterLView to ~9% of screen height
-			mealFilterLView.setPrefHeight(SCREEN_HEIGHT/11);
-			
-			HBox buttonsHBox2 = new HBox(10); // HBox to hold "Edit" and "Delete" buttons
-			Button mealEditFilterButton = new Button("Edit"); 		// Button to edit a filter
-			Button mealDeleteFilterButton = new Button("Delete"); 	// Button to delete a filter
+
 			Button displayMealButton = new Button("Analyze Meal"); 	// Button to analyze/disp. meal
 			Label blankLabel = new Label(""); // Blank label for formatting
 			Label mealPaneLabel = new Label("Meals"); // Heading for meal pane (right pane)
 			
-			// Add food filter GUI objects to HBox
-			mealFilterHBox.getChildren().addAll(mealCompFiltersCBox, mealFilterValue, mealFilterAddButton); 
-			
-			// Add "Edit" and "Delete" buttons to HBox
-			buttonsHBox2.getChildren().addAll(mealEditFilterButton, mealDeleteFilterButton);
+			// Creates filter section of meal VBox
+			FilterGUI mealFilter = new FilterGUI("Food", SCREEN_HEIGHT, SCREEN_WIDTH);
+			VBox mFilter = foodFilter.makeFilterVBox();
 			
 			// Set GUI Objects on Food Pane
-			mealPaneVBox.getChildren().addAll(newMealButton, queryMealField, mealListView, dispMealsLabel, mealFiltersCBox, 
-					mealFilterHBox, mealFilterLView, buttonsHBox2, displayMealButton, blankLabel, mealPaneLabel);
+			mealPaneVBox.getChildren().addAll(newMealButton, queryMealField, mealListView, dispMealsLabel, mFilter,
+					displayMealButton, blankLabel, mealPaneLabel);
 			
 			// Set Food (left) and Meal (right) pane in main BoarderPane
 			boarderPane.setLeft(foodPaneVBox);
