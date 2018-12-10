@@ -31,6 +31,42 @@ public class PopUpFood {
 	Stage foodWindow;
 	
 	public PopUpFood(){
+		foodWindow = new Stage();
+		BorderPane food = new BorderPane();
+		
+		Label foodTitle = new Label("Create Food!");
+		foodTitle.setFont(new Font(24));
+		
+		Label upload = new Label("Upload New Food File");
+		
+		TextField filePath = new TextField();
+		Label fileLabel = new Label("Input Filename");
+		
+		Button uploadButton = new Button("Upload");
+		
+		
+		Label newFood = new Label("Add New Food to List");
+		
+		Label foodName = new Label("Name of Food");
+		TextField foodInput = new TextField("e.g. \"Apple\"");
+		foodInput.setFocusTraversable(false);
+		
+		Label calories = new Label("calories");
+		TextField calorieInput = new TextField();
+		
+		Label protein = new Label("protein in grams");
+		TextField proteinInput = new TextField();
+		
+		Label carb = new Label("carbohydrates in grams");
+		TextField carbInput = new TextField();
+		
+		Label fat = new Label("fat in grams");
+		TextField fatInput = new TextField();
+		
+		Label fiber = new Label("fiber in grams");
+		TextField fiberInput = new TextField();
+		
+		Button addFood = new Button("Add Food");
 		
 	}
 
