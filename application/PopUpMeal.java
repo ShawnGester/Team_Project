@@ -32,40 +32,9 @@ public class PopUpMeal{
 	Stage mealWindow;
 	
 	public PopUpMeal(List<FoodItem> food){
-//		mealWindow = new Stage();
-//		VBox left = new VBox(30);
-//		VBox right = new VBox(10);
-//		VBox mealInfoBox = new VBox(10);
-//		HBox buttonBox = new HBox(10);
-//		HBox window = new HBox(10);
-//		
-//		Label mealEntry = new Label("Enter Name of Meal");
-//		TextField mealNameBox = new TextField();
-//		mealNameBox.setPromptText("e.g. \"Breakfast\"");
-//		mealNameBox.setFocusTraversable(false);
-//		Button addMealButton = new Button("Add Meal");
-//		
-//		mealInfoBox.getChildren().addAll(mealEntry, mealNameBox);
-//		buttonBox.getChildren().add(addMealButton);
-//		buttonBox.setAlignment(Pos.CENTER);
-//		
-//		left.getChildren().addAll(mealInfoBox, buttonBox);
-//		
-//		window.getChildren().addAll(left, right);
-//		window.setAlignment(Pos.BOTTOM_CENTER);
-//		window.setPrefWidth(600);
-//		window.setPrefHeight(400);
-//		
-//		window.setStyle("-fx-background-color: aquamarine");
-//		
-//		Scene mealScene = new Scene(window, 600, 400);
-//		
-//		
-//		mealWindow.setScene(mealScene);
-//		mealWindow.show();
-		
-		
+				
 		mealWindow = new Stage();
+		mealWindow.setTitle("Create A New Meal");
 		
 		BorderPane mealBorder = new BorderPane();
 		HBox title = new HBox(10);
