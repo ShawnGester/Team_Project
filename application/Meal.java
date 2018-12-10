@@ -2,6 +2,7 @@ package application;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class represents a meal item with all its properties
@@ -45,20 +46,22 @@ public class Meal {
 	private void sumNutrients(){
 		ArrayList<String> name = new ArrayList<String>();
 		ArrayList<Double> values = new ArrayList<Double>();
-		List<String> tempName;
+		Set<String> tempName;
 		List<Double> tempValue;
 		
 		for(int i=0; i<food.size(); i++){
 			HashMap<String, Double> map = food.get(i).getNutrients();
-			tempName = (List<String>) map.keySet(); //returns list of nutrient names
+			tempName = map.keySet(); //returns list of nutrient names
 			tempValue = (List<Double>) map.values(); //returns list of nutrient values
-			for(int j=0; j<tempName.size(); j++){
-				if(name.contains(tempName.get(j))){
-					int index = name.indexOf(tempName.get(j));
-					values.set(index, values.get(index) + tempValue.get(j));
+			//for(int j=0; j<tempName.size(); j++){
+			while(tempName.iterator().hasNext()){
+				String temp = tempName.iterator().next();
+				if(name.contains(temp)){
+					int index = name.indexOf(temp);
+					values.set(index, values.get(index) + map.get(temp));
 				}else{
-					name.add(tempName.get(j));
-					values.add(tempValue.get(j));
+					name.add(temp);
+					values.add(map.get(temp));
 				}
 			}
 		}
@@ -77,15 +80,15 @@ public class Meal {
 		return nutrients;
 	}
 	
-	/**
-	 * Adds a nutrient and its value to this meal
-	 * If the nutrient already exists, updates its value
-	 * @param name
-	 * @param value
-	 */
-	public void addNutrient(String name, double value){
-		//necessary?
-	}
+//	/**
+//	 * Adds a nutrient and its value to this meal
+//	 * If the nutrient already exists, updates its value
+//	 * @param name
+//	 * @param value
+//	 */
+//	public void addNutrient(String name, double value){
+//		//necessary?
+//	}
 	
 	/**
 	 * returns the value of a given nutrient for this meal
@@ -99,6 +102,13 @@ public class Meal {
 	}
 	
 	public FoodItem getFood(String name){
+		if(food.contains(name)){
+			return food.get(food.indexOf(name));
+		}
 		return null;
+	}
+	
+	public List<FoodItem> getFoodList(){
+		return food;
 	}
 }
