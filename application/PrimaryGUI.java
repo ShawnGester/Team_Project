@@ -25,6 +25,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -45,6 +46,9 @@ public class PrimaryGUI {
 	private HashMap<String, FoodItem> foodItemsHMap;  // Hash Map of Food Items
 	private List<String> displayedFoodNamesList; //Food Names List
 	private List<String> foodFilterRules; //filter rules for food items
+	private boolean foodNotFoundFlag; //flag for showing food not found message
+	private int numFoodItems; // Number of food items in the program
+	private int numFoodsDisplayed; // Number of food items displayed
 	private static final double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth(); 
 	private static final double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getWidth();
 	
@@ -65,6 +69,9 @@ public class PrimaryGUI {
 			this.foodItemsHMap = new HashMap<String, FoodItem>();
 			this.displayedFoodNamesList = new ArrayList<String>();
 			this.foodFilterRules = new ArrayList<String>();
+			this.foodNotFoundFlag = false;
+			this.numFoodItems = 0;
+			
 			ScrollPane root = new ScrollPane(); 		// Primary Pane for GUI, allows scrolling
 			BorderPane boarderPane = new BorderPane();	// Structure for visual display	
 			Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT); // Create Scene
@@ -181,14 +188,53 @@ public class PrimaryGUI {
 	            @Override
 	            public void handle(ActionEvent event) {
 	                new PopUpFood(foodData);
+	                
 	                updateFoodNamesList(foodData.getAllFoodItems());
 	                foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
 	                
 	                
 	                updateFoodNamesList(foodData.filterByNutrients(foodFilterRules));
 		            foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
+		            //update size of food list and number of foods displayed
+		            updateFoodListSize(dispFoodsLabel);
 	            }
 		      });
+			
+			// Search for a food Field
+			queryFoodField.setOnAction((ae) -> {
+				String searchedFood = queryFoodField.getText();
+				updateFoodNamesList(foodData.filterByName(searchedFood));
+				foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
+				//update size of food list and number of foods displayed
+	            updateFoodListSize(dispFoodsLabel);
+	            
+				// if no foods match the search
+				if(foodData.filterByName(searchedFood).size()==0) {
+					if(!this.foodNotFoundFlag) {
+						// inform user that
+						Label foodDNEErrorMessage = new Label("*Error: food does not exist.");
+						foodDNEErrorMessage.setFont(new Font(10));
+						foodDNEErrorMessage.setTextFill(Color.RED);
+						foodPaneVBox.getChildren().add(2, foodDNEErrorMessage);
+						this.foodNotFoundFlag = true;
+						}
+				}
+				// else food doesn't exist, display message
+				else {
+					//if error message is up, delete it and reset flag
+					if(this.foodNotFoundFlag) {
+						foodPaneVBox.getChildren().remove(2);
+						this.foodNotFoundFlag = false;
+					}
+				}
+					
+					
+					
+					
+			}); 
+			
+			
+			
 			
 			// Add Filter to list of rules
 			foodAddFilterButton.setOnAction((ae) -> {
@@ -205,6 +251,8 @@ public class PrimaryGUI {
 						foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
 						filterLView.setItems(FXCollections.observableList(foodFilterRules));
 						filterValue.setText("");
+						//update size of food list and number of foods displayed
+			            updateFoodListSize(dispFoodsLabel);
 					}
 				}
 			});
@@ -223,6 +271,8 @@ public class PrimaryGUI {
 				foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
 				filterLView.setItems(FXCollections.observableList(foodFilterRules));
 				filterValue.setText("");
+				//update size of food list and number of foods displayed
+	            updateFoodListSize(dispFoodsLabel);
 			});
 			
 			
@@ -377,5 +427,12 @@ public class PrimaryGUI {
 			this.foodItemsHMap.put(foodItems.get(i).getName(), foodItems.get(i));
 		}
 		this.displayedFoodNamesList = foodNames;
+	}
+	private void updateFoodListSize(Label displayLabel) {
+		this.numFoodItems = foodData.getAllFoodItems().size();
+		this.numFoodsDisplayed = this.displayedFoodNamesList.size();
+		displayLabel.setText("Displaying " + this.numFoodsDisplayed 
+				+ " of " + this.numFoodItems + " foods"); // # of total foods disp.
+		
 	}
 }
