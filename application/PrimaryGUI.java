@@ -111,6 +111,7 @@ public class PrimaryGUI {
 	            }
 		      });
 			
+			
 			// Set Width of foodListView to ~24% of the screen width
 			foodListView.prefWidthProperty().set(SCREEN_WIDTH/4.2);
 			// Set Height of foodListView to ~14% of screen height
