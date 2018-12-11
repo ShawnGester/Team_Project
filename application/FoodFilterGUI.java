@@ -9,6 +9,8 @@ public class FoodFilterGUI extends FilterGUI {
 
 	public FoodFilterGUI(String fileType, double SCREEN_HEIGHT, double SCREEN_WIDTH) {
 		super(fileType, SCREEN_HEIGHT, SCREEN_WIDTH);
+		
+		
 	}
 
 	
