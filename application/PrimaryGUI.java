@@ -1,5 +1,8 @@
 package application;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -107,11 +110,13 @@ public class PrimaryGUI {
 			newFoodButton.setOnAction(new EventHandler<ActionEvent>() {
 	            @Override
 	            public void handle(ActionEvent event) {
-	                new PopUpFood(foodData);
+	                PopUpFood popUpWindow = new PopUpFood(foodData);
+	                List<String> foodNamesList = getFoodNamesList();
+	                ObservableList<String> foodNamesOList = FXCollections.observableList(foodNamesList);
+	                foodListView.setItems(foodNamesOList);
 	            }
 		      });
-			
-			
+				
 			// Set Width of foodListView to ~24% of the screen width
 			foodListView.prefWidthProperty().set(SCREEN_WIDTH/4.2);
 			// Set Height of foodListView to ~14% of screen height
@@ -207,5 +212,19 @@ public class PrimaryGUI {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	/**
+	 * Helper method that returns list of names of all foods
+	 * @return foodNames a list of type string that holds all names of foods
+	 */
+	private List<String> getFoodNamesList() {
+		List<String> foodNames = new ArrayList<String>();
+		List<FoodItem> foodItems = this.foodData.getAllFoodItems();
+		
+		// Get all food names and add to return list
+		for(int i = 0; i < foodItems.size(); i++) {
+			foodNames.add(foodItems.get(i).getName());
+		}
+		return foodNames;
 	}
 }

@@ -145,7 +145,7 @@ public class PopUpFood {
 		
 		Scene foodScene = new Scene(food, 600, 400);
 		foodWindow.setScene(foodScene);
-		foodWindow.show();
+		foodWindow.showAndWait();
 		
 	}
 
