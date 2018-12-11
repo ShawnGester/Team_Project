@@ -39,7 +39,7 @@ public class PrimaryGUI {
 	public FoodData foodData; // Food Data used in Meal Planner Program
 	private static final double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth(); 
 	private static final double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getWidth();
-
+	
 	/**
 	 * Handles Primary GUI for Meal Planner program. Single stage with single scene that has
 	 * three main panes. First pane on left-hand side of screen is "Food Pane". Food Pane allows
@@ -126,6 +126,23 @@ public class PrimaryGUI {
 			FilterGUI foodFilter = new FilterGUI("Food", SCREEN_HEIGHT, SCREEN_WIDTH);
 			VBox fFilter = foodFilter.makeFilterVBox();
 			
+			/*
+			 * EVENT HANDLERS FOR FOOD PANE 
+			 */
+			
+			// Clear initial text when Search for food query text field is selected
+			queryFoodField.setOnMousePressed((ae) -> {
+					queryFoodField.clear();
+			});
+			// Add "Search for a food..." text to food query text field
+			queryFoodField.setOnMouseExited((ae) -> {
+				//If user has not selected anything, return to original text
+				if(queryFoodField.getText().isEmpty()) {
+					queryFoodField.setText("Search for a food...");
+				}
+			});
+			
+			
 			// Set GUI Objects on Food Pane
 			foodPaneVBox.getChildren().addAll(newFoodButton, queryFoodField, foodListView, dispFoodsLabel, fFilter,
 					displayFoodButton, downloadFoodButton, foodPaneLabel);
@@ -165,8 +182,24 @@ public class PrimaryGUI {
 			Label mealPaneLabel = new Label("Meals"); // Heading for meal pane (right pane)
 			
 			// Creates filter section of meal VBox
-			FilterGUI mealFilter = new FilterGUI("Food", SCREEN_HEIGHT, SCREEN_WIDTH);
-			VBox mFilter = foodFilter.makeFilterVBox();
+			FilterGUI mealFilter = new FilterGUI("Meal", SCREEN_HEIGHT, SCREEN_WIDTH);
+			VBox mFilter = mealFilter.makeFilterVBox();
+			
+			/*
+			 * EVENT HANDLERS FOR MEAL PANE 
+			 */
+			
+			// Clear initial text when Search for meal query text field is selected
+			queryMealField.setOnMousePressed((ae) -> {
+				queryMealField.clear();
+			});
+			// Add "Search for a food..." text to food query text field
+			queryMealField.setOnMouseExited((ae) -> {
+				// If user has not selected anything, return to original text
+				if (queryMealField.getText().isEmpty()) {
+					queryMealField.setText("Search for a meal...");
+				}
+			});
 			
 			// Set GUI Objects on Food Pane
 			mealPaneVBox.getChildren().addAll(newMealButton, queryMealField, mealListView, dispMealsLabel, mFilter,
