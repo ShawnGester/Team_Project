@@ -5,6 +5,8 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -32,8 +34,9 @@ import javafx.stage.Stage;
 public class PopUpMeal{
 	//Popup meal = new Popup();
 	Stage mealWindow;
+	boolean errorThere = true;
 	
-	public PopUpMeal(List<FoodItem> food){
+	public PopUpMeal(List<FoodItem> food, MealData mealData){
 				
 		mealWindow = new Stage();
 		mealWindow.setTitle("Create A New Meal");
@@ -63,12 +66,16 @@ public class PopUpMeal{
 		Label foodLabel = new Label("Choose the food to include in you meal");
 		ScrollPane foodList = new ScrollPane();
 		foodList.setMinHeight(200);
+		foodList.setMaxHeight(300);
+		foodList.setMaxWidth(300);
 		
 		VBox allCheckFood = new VBox(5);
+		List<CheckBox> boxes = new ArrayList<CheckBox>();
 		try{
 			for(int j=0; j<food.size(); j++){
 				String tempName = food.get(j).getName();
-				allCheckFood.getChildren().add(new CheckBox(tempName));
+				boxes.add(new CheckBox(tempName));
+				allCheckFood.getChildren().add(boxes.get(j));
 			}
 			foodList.setContent(allCheckFood);
 		}catch(Exception e){
@@ -84,7 +91,39 @@ public class PopUpMeal{
 		
 		buttonBox.getChildren().add(addMeal);
 		buttonBox.setAlignment(Pos.CENTER);
-		buttonBox.setPadding(new Insets(0,0,30,0));
+		buttonBox.setPadding(new Insets(10,0,30,0));
+		
+		addMeal.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				List<FoodItem> selectFoodList = new ArrayList<FoodItem>();
+				for(int j=0; j<boxes.size(); j++){
+					if(boxes.get(j).isSelected()){
+						String selectFoodName = boxes.get(j).getText();
+						for(int i=0; i<food.size(); i++){
+							if(food.get(i).getName().equals(selectFoodName)){
+								selectFoodList.add(food.get(i));
+								break;
+							}
+						}
+					}
+				}
+				String mealName = nameInput.getText();
+				if(mealName != null && !mealName.trim().equals("")){
+					mealData.addMeal(new Meal(mealName, selectFoodList));
+					mealWindow.hide();
+				}else{
+					Label errorMeal = new Label("*Error: invalid name");
+					errorMeal.setFont(new Font(10));
+					errorMeal.setTextFill(Color.RED);
+					if(errorThere){
+						left.getChildren().add(1, errorMeal);
+						errorThere = false;
+					}
+				}
+				
+			}
+		});
 		
 		mealBorder.setTop(title);
 		mealBorder.setLeft(left);
@@ -94,7 +133,7 @@ public class PopUpMeal{
 		Scene mealScene = new Scene(mealBorder, 600, 400);
 		
 		mealWindow.setScene(mealScene);
-		mealWindow.show();
+		mealWindow.showAndWait();
 	}
 
 }
