@@ -1,6 +1,7 @@
-package application;
+  package application;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -99,12 +100,17 @@ public class PrimaryGUI {
 			Label displayPaneLabel = new Label("Details");	 // Heading for display (center pane)
 			BorderPane topBPane = new BorderPane(progNameLabel); // BPane for top of GUI
 			BorderPane centerBPane = new BorderPane(); // BPane for center of GUI
+			BorderPane displayBPane = new BorderPane(); //BPane to set center section of centerBPane
 			
 			// Set nested panes in main BoarderPane
 			boarderPane.setTop(topBPane);
 			boarderPane.setCenter(centerBPane);
 			
 			centerBPane.setTop(displayPaneLabel);
+			centerBPane.setCenter(displayBPane);
+			BorderPane.setMargin(displayBPane, new Insets(50,10,10,10));
+			
+			
 			// Place "Details" Heading at Top-Left of center section of main BPane
 			BorderPane.setAlignment(displayPaneLabel, Pos.TOP_LEFT); 
 		
@@ -271,11 +277,77 @@ public class PrimaryGUI {
 			
 			// Display Food Button to the detail pane
 			displayFoodButton.setOnAction((ae) -> {
-				String selectedFood = foodListView.getSelectionModel().getSelectedItem();
-				foodNameDetailsPane.setText("Food Name: " + selectedFood);
-				centerBPane.setCenter(foodNameDetailsPane);
+				
+				String selectedFoodName = foodListView.getSelectionModel().getSelectedItem();
+				foodNameDetailsPane.setText("Food Name: " + selectedFoodName);
+				VBox nutrientVBox = new VBox();			// VBox to hold nutrient labels
+				VBox nutrientValueVBox = new VBox(); 	// VBox to hold nutrient values
+				// Labels for VBox on left side of BPane in Details Pane
+				Label foodIDLabel = new Label();		// Selected food ID Label
+				Label nutrientsLabel = new Label("Nutrients"); //UNDERLINE ME
+				Label caloriesLabel = new Label();
+				Label fatLabel = new Label();
+				Label carbLabel = new Label();
+				Label fiberLabel = new Label();
+				Label proteinLabel = new Label();
+				// Labels for VBox on right side of BPane in Details Pane (nutrient Vals)
+				Label caloriesVal= new Label();
+				Label fatVal = new Label();
+				Label carbVal = new Label();
+				Label fiberVal = new Label();
+				Label proteinVal = new Label();
+				
+				FoodItem selectedFood = this.foodItemsHMap.get(selectedFoodName); // selected food
+				// Get attributes about the food
+				String foodID = selectedFood.getID();
+				double calories = selectedFood.getNutrientValue("calories");
+				double fat = selectedFood.getNutrientValue("fat");
+				double carbs = selectedFood.getNutrientValue("carbohydrate");
+				double fiber = selectedFood.getNutrientValue("fiber");
+				double protein = selectedFood.getNutrientValue("protein");
+				// Get attribute labels padded with periods on right side
+				String calLabelText = padStrWithPer("Calories (kcal):",200);
+				String fatLabelText = padStrWithPer("Fat (g):",200);
+				String carbLabelText = padStrWithPer("Carbs (g):",200);
+				String fiberLabelText = padStrWithPer("Fiber (g):",200);
+				String proteinLabelText = padStrWithPer("Protein (g):",200);
+				// Set text of Food attribute labels
+				foodIDLabel.setText("Food ID: " + foodID);
+				caloriesLabel.setText(calLabelText);
+				fatLabel.setText(fatLabelText);
+				carbLabel.setText(carbLabelText);
+				fiberLabel.setText(fiberLabelText);
+				proteinLabel.setText(proteinLabelText);
+				// Set text of Food value labels
+				caloriesVal.setText("" + calories);
+				fatVal.setText("" + fat);
+				carbVal.setText("" + carbs);
+				fiberVal.setText("" + fiber);
+				proteinVal.setText("" + protein);
+				
+				// Add attribute labels to vbox
+				nutrientVBox.getChildren().addAll(foodIDLabel, caloriesLabel, fatLabel
+						, carbLabel, fiberLabel, proteinLabel);
+				// Add Nutrient Values to VBox
+				nutrientValueVBox.getChildren().addAll(new Label(), caloriesVal, fatVal, carbVal
+						, fiberVal, proteinVal);
+				
+				// Set nodes in display pane
+				displayBPane.setTop(foodNameDetailsPane);
+				displayBPane.setLeft(nutrientVBox); 
+				displayBPane.setRight(nutrientValueVBox);
+				
+				nutrientVBox.setSpacing(15);		// Spacing between labels
+				nutrientValueVBox.setSpacing(15);	// Spacing between values
+				// Set width of Panes in Display Pane
+				nutrientVBox.prefWidthProperty().set(centerBPane.getWidth()*.65);
+				nutrientValueVBox.prefWidthProperty().set(centerBPane.getWidth()*.2);
+				// Set alignments in panes and margins for VBoxes 
 				BorderPane.setAlignment(foodNameDetailsPane, Pos.TOP_CENTER);
-				BorderPane.setMargin(foodNameDetailsPane, new Insets(50,10,10,10));
+				BorderPane.setAlignment(nutrientValueVBox, Pos.TOP_LEFT);
+				BorderPane.setMargin(nutrientVBox, new Insets(35,0,0,10));
+				BorderPane.setMargin(nutrientValueVBox, new Insets(35,0,0,0));
+
 			});
 			
 			// Add food filter GUI objects to HBox
@@ -436,5 +508,20 @@ public class PrimaryGUI {
 		displayLabel.setText("Displaying " + this.numFoodsDisplayed 
 				+ " of " + this.numFoodItems + " foods"); // # of total foods disp.
 		
+	}
+	/**
+	 * Helper method that pads string with periods
+	 * @param str
+	 * @param totalLength
+	 * @return
+	 */
+	private String padStrWithPer(String str, int totalLength) {
+
+		StringBuilder sb = new StringBuilder();
+		char[] padding = new char[totalLength - str.length()];
+		Arrays.fill(padding, '.');
+		str += sb.append(padding).toString();
+
+		return str;
 	}
 }
