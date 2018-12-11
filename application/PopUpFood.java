@@ -1,6 +1,7 @@
 package application;
 
 import java.util.List;
+import java.util.UUID;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -125,6 +126,19 @@ public class PopUpFood {
             @Override
             public void handle(ActionEvent event) {
                 //How to make a food item without an id?
+            	String id = UUID.randomUUID().toString();
+            	id.replace("-", "");
+            	id.substring(0,24); //want it a length 24, exclusive
+            	
+            	String name = foodInput.getText();
+            	
+            	FoodItem newFood = new FoodItem(id, name);
+            	newFood.addNutrient("calories", Double.parseDouble(calorieInput.getText()));
+            	newFood.addNutrient("protein", Double.parseDouble(proteinInput.getText()));
+            	newFood.addNutrient("carbohydrates", Double.parseDouble(carbInput.getText()));
+            	newFood.addNutrient("fat", Double.parseDouble(fatInput.getText()));
+            	newFood.addNutrient("fiber", Double.parseDouble(fiberInput.getText()));
+            	foodData.addFoodItem(newFood);
             	foodWindow.hide();
             }
 	      });
