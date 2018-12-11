@@ -31,8 +31,9 @@ import javafx.stage.Stage;
 
 public class PopUpFood {
 	Stage foodWindow;
-	
+	private FoodData foodData;
 	public PopUpFood(FoodData foodData){
+		this.foodData = foodData;
 		foodWindow = new Stage();
 		foodWindow.setTitle("Create A Food Item");
 		BorderPane food = new BorderPane();
@@ -59,7 +60,7 @@ public class PopUpFood {
 		uploadButton.setOnAction(new EventHandler<ActionEvent>() {
 	            @Override
 	            public void handle(ActionEvent event) {
-	                String filename = filePath.getAccessibleText();
+	                String filename = filePath.getText();
 	                if(filename != null){
 	                	try{
 	                		foodData.loadFoodItems(filename);

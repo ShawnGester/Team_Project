@@ -53,8 +53,7 @@ public class PrimaryGUI {
 	 */
 	public PrimaryGUI(FoodData foodData, Stage primaryStage) {
 		try {
-			
-			
+			this.foodData = foodData; // FoodData instance
 			ScrollPane root = new ScrollPane(); 		// Primary Pane for GUI, allows scrolling
 			BorderPane boarderPane = new BorderPane();	// Structure for visual display	
 			Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT); // Create Scene
@@ -101,13 +100,14 @@ public class PrimaryGUI {
 			foodPaneVBox.setPadding(new Insets(0,0,0,10));
 			 
 			Button newFoodButton = new Button("+ New Food"); // Button for adding food to list
-			TextField queryFoodField = new TextField("Search for a food..."); // Food query field
+			TextField queryFoodField = new TextField(); // Food query field
+			queryFoodField.setPromptText("Search for a food...");
 			ListView<String> foodListView = new ListView<String>(); // Filtered list of cur foods
 			
 			newFoodButton.setOnAction(new EventHandler<ActionEvent>() {
 	            @Override
 	            public void handle(ActionEvent event) {
-	                new PopUpFood(null);
+	                new PopUpFood(foodData);
 	            }
 		      });
 			
@@ -131,17 +131,6 @@ public class PrimaryGUI {
 			 * EVENT HANDLERS FOR FOOD PANE 
 			 */
 			
-			// Clear initial text when Search for food query text field is selected
-			queryFoodField.setOnMousePressed((ae) -> {
-					queryFoodField.clear();
-			});
-			// Add "Search for a food..." text to food query text field
-			queryFoodField.setOnMouseExited((ae) -> {
-				//If user has not selected anything, return to original text
-				if(queryFoodField.getText().isEmpty()) {
-					queryFoodField.setText("Search for a food...");
-				}
-			});
 			
 			
 			// Set GUI Objects on Food Pane
@@ -161,7 +150,8 @@ public class PrimaryGUI {
 			mealPaneVBox.setPadding(new Insets(0,0,0,10));
 			 
 			Button newMealButton = new Button("+ New Meal"); // Button for creating new meal
-			TextField queryMealField = new TextField("Search for a meal..."); // Meal query field
+			TextField queryMealField = new TextField(); // Meal query field
+			queryMealField.setPromptText("Search for a meal...");
 			ListView<String> mealListView = new ListView<String>(); // Filtered list of cur meals
 			
 			newMealButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -190,17 +180,7 @@ public class PrimaryGUI {
 			 * EVENT HANDLERS FOR MEAL PANE 
 			 */
 			
-			// Clear initial text when Search for meal query text field is selected
-			queryMealField.setOnMousePressed((ae) -> {
-				queryMealField.clear();
-			});
-			// Add "Search for a food..." text to food query text field
-			queryMealField.setOnMouseExited((ae) -> {
-				// If user has not selected anything, return to original text
-				if (queryMealField.getText().isEmpty()) {
-					queryMealField.setText("Search for a meal...");
-				}
-			});
+			
 			
 			// Set GUI Objects on Food Pane
 			mealPaneVBox.getChildren().addAll(newMealButton, queryMealField, mealListView, dispMealsLabel, mFilter,
