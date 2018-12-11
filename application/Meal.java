@@ -47,12 +47,12 @@ public class Meal {
 		ArrayList<String> name = new ArrayList<String>();
 		ArrayList<Double> values = new ArrayList<Double>();
 		Set<String> tempName;
-		List<Double> tempValue;
+//		List<Double> tempValue;
 		
 		for(int i=0; i<food.size(); i++){
 			HashMap<String, Double> map = food.get(i).getNutrients();
 			tempName = map.keySet(); //returns list of nutrient names
-			tempValue = (List<Double>) map.values(); //returns list of nutrient values
+//			tempValue = (List<Double>) map.values(); //returns list of nutrient values
 			//for(int j=0; j<tempName.size(); j++){
 			while(tempName.iterator().hasNext()){
 				String temp = tempName.iterator().next();

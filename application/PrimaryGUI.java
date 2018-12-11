@@ -2,6 +2,8 @@ package application;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -102,6 +104,13 @@ public class PrimaryGUI {
 			TextField queryFoodField = new TextField("Search for a food..."); // Food query field
 			ListView<String> foodListView = new ListView<String>(); // Filtered list of cur foods
 			
+			newFoodButton.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	                new PopUpFood(null);
+	            }
+		      });
+			
 			// Set Width of foodListView to ~24% of the screen width
 			foodListView.prefWidthProperty().set(SCREEN_WIDTH/4.2);
 			// Set Height of foodListView to ~14% of screen height
@@ -136,6 +145,13 @@ public class PrimaryGUI {
 			Button newMealButton = new Button("+ New Meal"); // Button for creating new meal
 			TextField queryMealField = new TextField("Search for a meal..."); // Meal query field
 			ListView<String> mealListView = new ListView<String>(); // Filtered list of cur meals
+			
+			newMealButton.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	                new PopUpMeal(null);
+	            }
+		      });
 			
 			// Set Width of mealListView to ~24% of the screen width
 			mealListView.prefWidthProperty().set(SCREEN_WIDTH/4.2);
