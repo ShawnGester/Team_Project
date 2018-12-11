@@ -32,6 +32,7 @@ public class MealData {
 	
 	public void addMeal(Meal meal){
 		mealList.add(meal);
+		mealList.sort((Meal f1, Meal f2)-> f1.getName().toUpperCase().compareTo(f2.getName().toUpperCase()));
 		trees.get("calories").insert(meal.getNutrientValue("calories"), meal);
 		trees.get("carbs").insert(meal.getNutrientValue("carbs"), meal);
 		trees.get("fat").insert(meal.getNutrientValue("fat"), meal);
@@ -60,4 +61,121 @@ public class MealData {
     	return filterList;
     }
 
+	public List<Meal> filterByNutrient(List<String> rules){
+    	//rules in the format "nutrient comparator value"
+    	List<Meal> filterListIterate = new ArrayList<Meal>();
+    	filterListIterate = mealList;
+    	List<Meal> filterListFiltered = new ArrayList<Meal>();
+    	for(String rule : rules) {
+    		String[] splitList = rule.split(" ");
+    		for(Meal meal : filterListIterate) {		
+    			if(splitList[0].toLowerCase().equals("calories")) {
+    				if(splitList[1].equals("==")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("calories")==value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    				else if(splitList[1].equals("<=")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("calories")<=value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    				else if(splitList[1].equals(">=")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("calories")>=value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    			}
+    			else if(splitList[0].toLowerCase().equals("fat")) {
+    				if(splitList[1].equals("==")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("fat")==value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    				else if(splitList[1].equals("<=")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("fat")<=value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    				else if(splitList[1].equals(">=")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("fat")>=value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    			}
+    			else if(splitList[0].toLowerCase().equals("protein")) {
+    				if(splitList[1].equals("==")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("protein")==value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    				else if(splitList[1].equals("<=")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("protein")<=value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    				else if(splitList[1].equals(">=")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("protein")>=value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    			}
+    			else if(splitList[0].toLowerCase().equals("fiber")) {
+    				//System.out.println("do you get here?");
+    				if(splitList[1].equals("==")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("fiber")==value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    				else if(splitList[1].equals("<=")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("fiber")<=value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    				else if(splitList[1].equals(">=")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("fiber")>=value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    			}
+    			else if(splitList[0].toLowerCase().equals("carbohydrate")) {
+    				if(splitList[1].equals("==")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("carbohydrate")==value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    				else if(splitList[1].equals("<=")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("carbohydrate")<=value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    				else if(splitList[1].equals(">=")) {
+    					Double value = Double.parseDouble(splitList[2]);
+    					if(meal.getNutrientValue("carbohydrate")>=value){
+    						filterListFiltered.add(meal);
+    					}
+    				}
+    			}
+    		}
+    		filterListIterate = filterListFiltered;
+    		filterListFiltered = new ArrayList<Meal>();
+    	}
+    	filterListIterate.sort((Meal f1, Meal f2)-> f1.getName().toUpperCase().compareTo(f2.getName().toUpperCase()));
+    	return filterListIterate;
+    }
 }
+
