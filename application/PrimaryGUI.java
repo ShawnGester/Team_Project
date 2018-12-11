@@ -98,12 +98,13 @@ public class PrimaryGUI {
 			progNameLabel.setId("title");
 			Label displayPaneLabel = new Label("Details");	 // Heading for display (center pane)
 			BorderPane topBPane = new BorderPane(progNameLabel); // BPane for top of GUI
-			BorderPane centerBPane = new BorderPane(displayPaneLabel); // BPane for center of GUI
+			BorderPane centerBPane = new BorderPane(); // BPane for center of GUI
 			
 			// Set nested panes in main BoarderPane
 			boarderPane.setTop(topBPane);
 			boarderPane.setCenter(centerBPane);
 			
+			centerBPane.setTop(displayPaneLabel);
 			// Place "Details" Heading at Top-Left of center section of main BPane
 			BorderPane.setAlignment(displayPaneLabel, Pos.TOP_LEFT); 
 		
@@ -131,7 +132,7 @@ public class PrimaryGUI {
 			foodListView.setPrefHeight(SCREEN_HEIGHT/7);
 			
 			Label dispFoodsLabel = new Label("Displaying 0 of 0 foods"); // # of total foods disp.
-
+			Label foodNameDetailsPane = new Label(); // Food Label used in details pane
 			Button displayFoodButton = new Button("Display Food"); 	// Button to display food details
 			Button downloadFoodButton = new Button("Download Food List"); // download list of foods
 			Label foodPaneLabel = new Label("Foods"); // Heading for food pane (left pane)
@@ -226,15 +227,8 @@ public class PrimaryGUI {
 						foodPaneVBox.getChildren().remove(2);
 						this.foodNotFoundFlag = false;
 					}
-				}
-					
-					
-					
-					
+				}	
 			}); 
-			
-			
-			
 			
 			// Add Filter to list of rules
 			foodAddFilterButton.setOnAction((ae) -> {
@@ -275,6 +269,14 @@ public class PrimaryGUI {
 	            updateFoodListSize(dispFoodsLabel);
 			});
 			
+			// Display Food Button to the detail pane
+			displayFoodButton.setOnAction((ae) -> {
+				String selectedFood = foodListView.getSelectionModel().getSelectedItem();
+				foodNameDetailsPane.setText("Food Name: " + selectedFood);
+				centerBPane.setCenter(foodNameDetailsPane);
+				BorderPane.setAlignment(foodNameDetailsPane, Pos.TOP_CENTER);
+				BorderPane.setMargin(foodNameDetailsPane, new Insets(50,10,10,10));
+			});
 			
 			// Add food filter GUI objects to HBox
 			filterHBox.getChildren().addAll(compFiltersCBox, filterValue, foodAddFilterButton); 
