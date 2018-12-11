@@ -1,3 +1,5 @@
+package application;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,7 +51,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
     	foodItemList = new ArrayList<FoodItem>(); //list cleared whenever this method is called
     	Scanner scanner = null;
     	try{
-    		File file = new File(filePath);
+    		File file = new File("application\\" + filePath);
     		scanner = new Scanner(file);
     		while(scanner.hasNext()) {
     			String line = scanner.next();
@@ -319,47 +321,4 @@ public class FoodData implements FoodDataADT<FoodItem> {
 			//not sure what to do here
 		}
 	}
-}
-    @Override
-    public List<FoodItem> filterByName(String substring) {
-        // TODO : Complete
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see skeleton.FoodDataADT#filterByNutrients(java.util.List)
-     */
-    @Override
-    public List<FoodItem> filterByNutrients(List<String> rules) {
-        // TODO : Complete
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see skeleton.FoodDataADT#addFoodItem(skeleton.FoodItem)
-     */
-    @Override
-    public void addFoodItem(FoodItem foodItem) {
-        // TODO : Complete
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see skeleton.FoodDataADT#getAllFoodItems()
-     */
-    @Override
-    public List<FoodItem> getAllFoodItems() {
-        // TODO : Complete
-        return null;
-    }
-
-
-	@Override
-	public void saveFoodItems(String filename) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
