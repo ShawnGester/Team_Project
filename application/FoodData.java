@@ -51,6 +51,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
     	foodItemList = new ArrayList<FoodItem>(); //list cleared whenever this method is called
     	Scanner scanner = null;
     	try{
+    		//FIXME this needs to change 
     		File file = new File("application\\" + filePath);
     		scanner = new Scanner(file);
     		while(scanner.hasNext()) {
@@ -148,12 +149,6 @@ public class FoodData implements FoodDataADT<FoodItem> {
         	});
         return filterList;
         }
-   
-    public List<FoodItem> filterByNutrientsTwo(List<String> rules) {
-    	
-    	return null;
-    }
-    
     
     /*
      * (non-Javadoc)

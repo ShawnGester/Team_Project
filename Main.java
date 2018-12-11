@@ -29,6 +29,7 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
+		this.foodData = new FoodData();
 		this.primaryGUI = new PrimaryGUI(foodData, primaryStage);
 	}
 	
