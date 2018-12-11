@@ -1,6 +1,7 @@
-package application;
+  package application;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +26,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -45,6 +47,9 @@ public class PrimaryGUI {
 	private HashMap<String, FoodItem> foodItemsHMap;  // Hash Map of Food Items
 	private List<String> displayedFoodNamesList; //Food Names List
 	private List<String> foodFilterRules; //filter rules for food items
+	private boolean foodNotFoundFlag; //flag for showing food not found message
+	private int numFoodItems; // Number of food items in the program
+	private int numFoodsDisplayed; // Number of food items displayed
 	private static final double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth(); 
 	private static final double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getWidth();
 	
@@ -65,6 +70,9 @@ public class PrimaryGUI {
 			this.foodItemsHMap = new HashMap<String, FoodItem>();
 			this.displayedFoodNamesList = new ArrayList<String>();
 			this.foodFilterRules = new ArrayList<String>();
+			this.foodNotFoundFlag = false;
+			this.numFoodItems = 0;
+			
 			ScrollPane root = new ScrollPane(); 		// Primary Pane for GUI, allows scrolling
 			BorderPane boarderPane = new BorderPane();	// Structure for visual display	
 			Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT); // Create Scene
@@ -91,11 +99,17 @@ public class PrimaryGUI {
 			progNameLabel.setId("title");
 			Label displayPaneLabel = new Label("Details");	 // Heading for display (center pane)
 			BorderPane topBPane = new BorderPane(progNameLabel); // BPane for top of GUI
-			BorderPane centerBPane = new BorderPane(displayPaneLabel); // BPane for center of GUI
+			BorderPane centerBPane = new BorderPane(); // BPane for center of GUI
+			BorderPane displayBPane = new BorderPane(); //BPane to set center section of centerBPane
 			
 			// Set nested panes in main BoarderPane
 			boarderPane.setTop(topBPane);
 			boarderPane.setCenter(centerBPane);
+			
+			centerBPane.setTop(displayPaneLabel);
+			centerBPane.setCenter(displayBPane);
+			BorderPane.setMargin(displayBPane, new Insets(50,10,10,10));
+			
 			
 			// Place "Details" Heading at Top-Left of center section of main BPane
 			BorderPane.setAlignment(displayPaneLabel, Pos.TOP_LEFT); 
@@ -124,7 +138,7 @@ public class PrimaryGUI {
 			foodListView.setPrefHeight(SCREEN_HEIGHT/7);
 			
 			Label dispFoodsLabel = new Label("Displaying 0 of 0 foods"); // # of total foods disp.
-
+			Label foodNameDetailsPane = new Label(); // Food Label used in details pane
 			Button displayFoodButton = new Button("Display Food"); 	// Button to display food details
 			Button downloadFoodButton = new Button("Download Food List"); // download list of foods
 			Label foodPaneLabel = new Label("Foods"); // Heading for food pane (left pane)
@@ -181,14 +195,46 @@ public class PrimaryGUI {
 	            @Override
 	            public void handle(ActionEvent event) {
 	                new PopUpFood(foodData);
+	                
 	                updateFoodNamesList(foodData.getAllFoodItems());
 	                foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
 	                
 	                
 	                updateFoodNamesList(foodData.filterByNutrients(foodFilterRules));
 		            foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
+		            //update size of food list and number of foods displayed
+		            updateFoodListSize(dispFoodsLabel);
 	            }
 		      });
+			
+			// Search for a food Field
+			queryFoodField.setOnAction((ae) -> {
+				String searchedFood = queryFoodField.getText();
+				updateFoodNamesList(foodData.filterByName(searchedFood));
+				foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
+				//update size of food list and number of foods displayed
+	            updateFoodListSize(dispFoodsLabel);
+	            
+				// if no foods match the search
+				if(foodData.filterByName(searchedFood).size()==0) {
+					if(!this.foodNotFoundFlag) {
+						// inform user that
+						Label foodDNEErrorMessage = new Label("*Error: food does not exist.");
+						foodDNEErrorMessage.setFont(new Font(10));
+						foodDNEErrorMessage.setTextFill(Color.RED);
+						foodPaneVBox.getChildren().add(2, foodDNEErrorMessage);
+						this.foodNotFoundFlag = true;
+						}
+				}
+				// else food doesn't exist, display message
+				else {
+					//if error message is up, delete it and reset flag
+					if(this.foodNotFoundFlag) {
+						foodPaneVBox.getChildren().remove(2);
+						this.foodNotFoundFlag = false;
+					}
+				}	
+			}); 
 			
 			// Add Filter to list of rules
 			foodAddFilterButton.setOnAction((ae) -> {
@@ -205,6 +251,8 @@ public class PrimaryGUI {
 						foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
 						filterLView.setItems(FXCollections.observableList(foodFilterRules));
 						filterValue.setText("");
+						//update size of food list and number of foods displayed
+			            updateFoodListSize(dispFoodsLabel);
 					}
 				}
 			});
@@ -223,8 +271,84 @@ public class PrimaryGUI {
 				foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
 				filterLView.setItems(FXCollections.observableList(foodFilterRules));
 				filterValue.setText("");
+				//update size of food list and number of foods displayed
+	            updateFoodListSize(dispFoodsLabel);
 			});
 			
+			// Display Food Button to the detail pane
+			displayFoodButton.setOnAction((ae) -> {
+				
+				String selectedFoodName = foodListView.getSelectionModel().getSelectedItem();
+				foodNameDetailsPane.setText("Food Name: " + selectedFoodName);
+				VBox nutrientVBox = new VBox();			// VBox to hold nutrient labels
+				VBox nutrientValueVBox = new VBox(); 	// VBox to hold nutrient values
+				// Labels for VBox on left side of BPane in Details Pane
+				Label foodIDLabel = new Label();		// Selected food ID Label
+				Label nutrientsLabel = new Label("Nutrients"); //UNDERLINE ME
+				Label caloriesLabel = new Label();
+				Label fatLabel = new Label();
+				Label carbLabel = new Label();
+				Label fiberLabel = new Label();
+				Label proteinLabel = new Label();
+				// Labels for VBox on right side of BPane in Details Pane (nutrient Vals)
+				Label caloriesVal= new Label();
+				Label fatVal = new Label();
+				Label carbVal = new Label();
+				Label fiberVal = new Label();
+				Label proteinVal = new Label();
+				
+				FoodItem selectedFood = this.foodItemsHMap.get(selectedFoodName); // selected food
+				// Get attributes about the food
+				String foodID = selectedFood.getID();
+				double calories = selectedFood.getNutrientValue("calories");
+				double fat = selectedFood.getNutrientValue("fat");
+				double carbs = selectedFood.getNutrientValue("carbohydrate");
+				double fiber = selectedFood.getNutrientValue("fiber");
+				double protein = selectedFood.getNutrientValue("protein");
+				// Get attribute labels padded with periods on right side
+				String calLabelText = padStrWithPer("Calories (kcal):",200);
+				String fatLabelText = padStrWithPer("Fat (g):",200);
+				String carbLabelText = padStrWithPer("Carbs (g):",200);
+				String fiberLabelText = padStrWithPer("Fiber (g):",200);
+				String proteinLabelText = padStrWithPer("Protein (g):",200);
+				// Set text of Food attribute labels
+				foodIDLabel.setText("Food ID: " + foodID);
+				caloriesLabel.setText(calLabelText);
+				fatLabel.setText(fatLabelText);
+				carbLabel.setText(carbLabelText);
+				fiberLabel.setText(fiberLabelText);
+				proteinLabel.setText(proteinLabelText);
+				// Set text of Food value labels
+				caloriesVal.setText("" + calories);
+				fatVal.setText("" + fat);
+				carbVal.setText("" + carbs);
+				fiberVal.setText("" + fiber);
+				proteinVal.setText("" + protein);
+				
+				// Add attribute labels to vbox
+				nutrientVBox.getChildren().addAll(foodIDLabel, caloriesLabel, fatLabel
+						, carbLabel, fiberLabel, proteinLabel);
+				// Add Nutrient Values to VBox
+				nutrientValueVBox.getChildren().addAll(new Label(), caloriesVal, fatVal, carbVal
+						, fiberVal, proteinVal);
+				
+				// Set nodes in display pane
+				displayBPane.setTop(foodNameDetailsPane);
+				displayBPane.setLeft(nutrientVBox); 
+				displayBPane.setRight(nutrientValueVBox);
+				
+				nutrientVBox.setSpacing(15);		// Spacing between labels
+				nutrientValueVBox.setSpacing(15);	// Spacing between values
+				// Set width of Panes in Display Pane
+				nutrientVBox.prefWidthProperty().set(centerBPane.getWidth()*.65);
+				nutrientValueVBox.prefWidthProperty().set(centerBPane.getWidth()*.2);
+				// Set alignments in panes and margins for VBoxes 
+				BorderPane.setAlignment(foodNameDetailsPane, Pos.TOP_CENTER);
+				BorderPane.setAlignment(nutrientValueVBox, Pos.TOP_LEFT);
+				BorderPane.setMargin(nutrientVBox, new Insets(35,0,0,10));
+				BorderPane.setMargin(nutrientValueVBox, new Insets(35,0,0,0));
+
+			});
 			
 			// Add food filter GUI objects to HBox
 			filterHBox.getChildren().addAll(compFiltersCBox, filterValue, foodAddFilterButton); 
@@ -377,5 +501,27 @@ public class PrimaryGUI {
 			this.foodItemsHMap.put(foodItems.get(i).getName(), foodItems.get(i));
 		}
 		this.displayedFoodNamesList = foodNames;
+	}
+	private void updateFoodListSize(Label displayLabel) {
+		this.numFoodItems = foodData.getAllFoodItems().size();
+		this.numFoodsDisplayed = this.displayedFoodNamesList.size();
+		displayLabel.setText("Displaying " + this.numFoodsDisplayed 
+				+ " of " + this.numFoodItems + " foods"); // # of total foods disp.
+		
+	}
+	/**
+	 * Helper method that pads string with periods
+	 * @param str
+	 * @param totalLength
+	 * @return
+	 */
+	private String padStrWithPer(String str, int totalLength) {
+
+		StringBuilder sb = new StringBuilder();
+		char[] padding = new char[totalLength - str.length()];
+		Arrays.fill(padding, '.');
+		str += sb.append(padding).toString();
+
+		return str;
 	}
 }
