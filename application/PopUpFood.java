@@ -4,6 +4,8 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -30,7 +32,7 @@ import javafx.stage.Stage;
 public class PopUpFood {
 	Stage foodWindow;
 	
-	public PopUpFood(){
+	public PopUpFood(FoodData foodData){
 		foodWindow = new Stage();
 		foodWindow.setTitle("Create A Food Item");
 		BorderPane food = new BorderPane();
@@ -48,24 +50,44 @@ public class PopUpFood {
 		upload.setFont(new Font(20));
 		
 		TextField filePath = new TextField();
+		filePath.setFocusTraversable(false);
 		Label fileLabel = new Label("Input Filename");
 		
 		Button uploadButton = new Button("Upload");
 		
+		//load the file when upload button is pressed
+		uploadButton.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	                String filename = filePath.getAccessibleText();
+	                if(filename != null){
+	                	try{
+	                		foodData.loadFoodItems(filename);
+	                		foodWindow.hide();
+	                	}catch(Exception e){
+	                		//maybe have words show up with error message?
+	                	}
+	                }
+	            }
+		      });
+		
 		BorderPane left = new BorderPane();
 		VBox text = new VBox(10);
 		text.getChildren().addAll(fileLabel, filePath, uploadButton);
+		text.setPadding(new Insets(30,0,0,0));
 		left.setTop(upload);
 		left.setCenter(text);
+		left.setPadding(new Insets(10,20,20,20));
 		
 		food.setLeft(left);
-		food.setAlignment(left, Pos.CENTER_RIGHT);
+		BorderPane.setAlignment(left, Pos.CENTER_RIGHT);//not sure if this is working
 		
 		Label newFood = new Label("Add New Food to List");
 		newFood.setFont(new Font(20));
 		
 		Label foodName = new Label("Name of Food");
-		TextField foodInput = new TextField("e.g. \"Apple\"");
+		TextField foodInput = new TextField();
+		foodInput.setPromptText("e.g. \"Apple\"");
 		foodInput.setFocusTraversable(false);
 		
 		VBox nameInfo = new VBox(10);
@@ -73,35 +95,38 @@ public class PopUpFood {
 		
 		Label calories = new Label("calories");
 		TextField calorieInput = new TextField();
+		calorieInput.setPromptText("unit kcal");
+		calorieInput.setFocusTraversable(false);
 		
-//		HBox calInfo = new HBox(10);
-//		calInfo.getChildren().addAll(calories, calorieInput);
-		
-		Label protein = new Label("protein in grams");
+		Label protein = new Label("protein");
 		TextField proteinInput = new TextField();
+		proteinInput.setPromptText("unit grams");
+		proteinInput.setFocusTraversable(false);
 		
-//		HBox proteinInfo = new HBox(10);
-//		proteinInfo.getChildren().addAll(protein, proteinInput);
-		
-		Label carb = new Label("carbohydrates in grams");
+		Label carb = new Label("carbohydrates");
 		TextField carbInput = new TextField();
+		carbInput.setPromptText("unit grams");
+		carbInput.setFocusTraversable(false);
 		
-//		HBox carbInfo = new HBox(10);
-//		carbInfo.getChildren().addAll(carb, carbInput);
-		
-		Label fat = new Label("fat in grams");
+		Label fat = new Label("fat");
 		TextField fatInput = new TextField();
+		fatInput.setPromptText("unit grams");
+		fatInput.setFocusTraversable(false);
 		
-//		HBox fatInfo = new HBox(10);
-//		fatInfo.getChildren().addAll(fat, fatInput);
-		
-		Label fiber = new Label("fiber in grams");
+		Label fiber = new Label("fiber");
 		TextField fiberInput = new TextField();
-		
-//		HBox fiberInfo = new HBox(10);
-//		fiberInfo.getChildren().addAll(fiber, fiberInput);
+		fiberInput.setPromptText("unit grams");
+		fiberInput.setFocusTraversable(false);
 		
 		Button addFood = new Button("Add Food");
+		
+		addFood.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //How to make a food item without an id?
+            	foodWindow.hide();
+            }
+	      });
 		
 		VBox right = new VBox(10);		
 		VBox labels = new VBox(20);
@@ -114,6 +139,7 @@ public class PopUpFood {
 		nutrientBox.getChildren().addAll(labels, fields);
 		
 		right.getChildren().addAll(newFood, nameInfo, nutrientBox, addFood);
+		right.setPadding(new Insets(10,20,20,20));
 		food.setRight(right);
 		
 		Scene foodScene = new Scene(food, 600, 400);
