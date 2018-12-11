@@ -161,8 +161,8 @@ public class PopUpFood {
 			public void handle(ActionEvent event) {
 				//Create arbitrary 24 character long id
 				String id = UUID.randomUUID().toString();
-				id.replace("-", "");
-				id.substring(0,24); 
+				id = id.replace("-", "");
+				id = id.substring(0,24); 
 
 				//get food name
 				String name = foodInput.getText();

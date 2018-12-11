@@ -47,20 +47,18 @@ public class Meal {
 		ArrayList<String> name = new ArrayList<String>();
 		ArrayList<Double> values = new ArrayList<Double>();
 		Set<String> tempName;
-//		List<Double> tempValue;
 		
 		for(int i=0; i<food.size(); i++){
 			HashMap<String, Double> map = food.get(i).getNutrients();
 			tempName = map.keySet(); //returns list of nutrient names
-//			tempValue = (List<Double>) map.values(); //returns list of nutrient values
-			//for(int j=0; j<tempName.size(); j++){
-			while(tempName.iterator().hasNext()){
-				String temp = tempName.iterator().next();
+			Object[] nutrientNames = tempName.toArray();
+			for(int j=0; j<nutrientNames.length; j++){
+				Object temp = nutrientNames[j];
 				if(name.contains(temp)){
 					int index = name.indexOf(temp);
 					values.set(index, values.get(index) + map.get(temp));
 				}else{
-					name.add(temp);
+					name.add(temp.toString());
 					values.add(map.get(temp));
 				}
 			}
@@ -80,15 +78,6 @@ public class Meal {
 		return nutrients;
 	}
 	
-//	/**
-//	 * Adds a nutrient and its value to this meal
-//	 * If the nutrient already exists, updates its value
-//	 * @param name
-//	 * @param value
-//	 */
-//	public void addNutrient(String name, double value){
-//		//necessary?
-//	}
 	
 	/**
 	 * returns the value of a given nutrient for this meal
