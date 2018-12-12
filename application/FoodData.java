@@ -1,5 +1,3 @@
-package application;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -100,7 +98,13 @@ public class FoodData implements FoodDataADT<FoodItem> {
     			if(cals.equals("CALORIES")) { //checking for appropriate format of data input
     				try{
 	    				double cal_val = Double.parseDouble(splitLine[3]);
-	    				newFood.addNutrient("calories", cal_val);
+	    				if(cal_val>=0) {
+	    					newFood.addNutrient("calories", cal_val);
+	    				}
+	    				else {
+	    					allFoodError = true;
+	    					thisFoodError = true;
+	    				}
     				}
     				catch(Exception e) {
     					allFoodError = true;
@@ -115,7 +119,13 @@ public class FoodData implements FoodDataADT<FoodItem> {
     			if(fat.equals("FAT")) {
     				try {
     					double fat_val = Double.parseDouble(splitLine[5]);
-    					newFood.addNutrient("fat", fat_val);
+    					if(fat_val>=0) {
+	    					newFood.addNutrient("fat", fat_val);
+	    				}
+	    				else {
+	    					allFoodError = true;
+	    					thisFoodError = true;
+	    				}
     				}
     				catch(Exception e) {
     					allFoodError = true;
@@ -130,7 +140,13 @@ public class FoodData implements FoodDataADT<FoodItem> {
     			if(carb.equals("CARBOHYDRATE")) {
     				try {
 	    				double carb_val = Double.parseDouble(splitLine[7]);
-	    				newFood.addNutrient("carbohydrate", carb_val);
+	    				if(carb_val>=0) {
+	    					newFood.addNutrient("carbohydrate", carb_val);
+	    				}
+	    				else {
+	    					allFoodError = true;
+	    					thisFoodError = true;
+	    				}
     				}
 					catch(Exception e) {
 						allFoodError = true;
@@ -145,7 +161,13 @@ public class FoodData implements FoodDataADT<FoodItem> {
     			if(fiber.equals("FIBER")) {
     				try {
 	    				double fiber_val = Double.parseDouble(splitLine[9]);
-	    				newFood.addNutrient("fiber", fiber_val);
+	    				if(fiber_val>=0) {
+	    					newFood.addNutrient("fiber", fiber_val);
+	    				}
+	    				else {
+	    					allFoodError = true;
+	    					thisFoodError = true;
+	    				}
 	    			}
 					catch(Exception e) {
 						allFoodError = true;
@@ -160,7 +182,13 @@ public class FoodData implements FoodDataADT<FoodItem> {
     			if(protein.equals("PROTEIN")) {
     				try {
 	    				double protein_val = Double.parseDouble(splitLine[11]);
-	    				newFood.addNutrient("protein", protein_val);
+	    				if(protein_val>=0) {
+	    					newFood.addNutrient("protein", protein_val);
+	    				}
+	    				else {
+	    					allFoodError = true;
+	    					thisFoodError = true;
+	    				}
 	    			}
 					catch(Exception e) {
 						allFoodError = true;
