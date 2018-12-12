@@ -24,7 +24,7 @@ public class MealData {
 		mealList = new ArrayList<Meal>();
 		trees = new HashMap<String, BPTree<Double, Meal>>();
 		trees.put("calories", new BPTree<Double, Meal>(3));
-		trees.put("carbs", new BPTree<Double, Meal>(3));
+		trees.put("carbohydrate", new BPTree<Double, Meal>(3));
 		trees.put("fat", new BPTree<Double, Meal>(3));
 		trees.put("fiber", new BPTree<Double, Meal>(3));
 		trees.put("protein", new BPTree<Double, Meal>(3));
@@ -34,7 +34,7 @@ public class MealData {
 		mealList.add(meal);
 		mealList.sort((Meal f1, Meal f2)-> f1.getName().toUpperCase().compareTo(f2.getName().toUpperCase()));
 		trees.get("calories").insert(meal.getNutrientValue("calories"), meal);
-		trees.get("carbs").insert(meal.getNutrientValue("carbs"), meal);
+		trees.get("carbohydrate").insert(meal.getNutrientValue("carbohydrate"), meal);
 		trees.get("fat").insert(meal.getNutrientValue("fat"), meal);
 		trees.get("fiber").insert(meal.getNutrientValue("fiber"), meal);
 		trees.get("protein").insert(meal.getNutrientValue("protein"), meal);
