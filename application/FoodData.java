@@ -52,7 +52,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
     	Scanner scanner = null;
     	try{
     		//FIXME this needs to change 
-    		File file = new File("application\\" + filePath);
+    		File file = new File(filePath); // add "application\\" so no merge conflicts
     		scanner = new Scanner(file);
     		while(scanner.hasNext()) {
     			String line = scanner.next();

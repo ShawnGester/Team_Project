@@ -1,5 +1,9 @@
 package application;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,10 +29,12 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.PopupWindow;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 public class PopUpFood {
 	Stage foodWindow;
@@ -53,23 +59,21 @@ public class PopUpFood {
 		Label upload = new Label("Upload New Food File");
 		upload.setFont(new Font(20));
 		
-		TextField filePath = new TextField();
-		filePath.setFocusTraversable(false);
-		Label fileLabel = new Label("Input Filename");
 		
 		Button uploadButton = new Button("Upload");
 		
 		//side the prompts new file to be uploaded
 		BorderPane left = new BorderPane();
 		VBox text = new VBox(10);
-		text.getChildren().addAll(fileLabel, filePath, uploadButton);
+		text.getChildren().addAll(uploadButton);
 		text.setPadding(new Insets(30,0,0,0));
 		left.setTop(upload);
-		left.setCenter(text);
+		left.setCenter(uploadButton);
 		left.setPadding(new Insets(10,20,20,20));
-		
+		BorderPane.setMargin(uploadButton, new Insets(35,0,0,0));
+		BorderPane.setAlignment(uploadButton, Pos.TOP_CENTER);//not sure if this is working
 		food.setLeft(left);
-		BorderPane.setAlignment(left, Pos.CENTER_RIGHT);//not sure if this is working
+		
 		
 		//right side of pop up window
 		Label newFood = new Label("Add New Food to List");
@@ -134,10 +138,29 @@ public class PopUpFood {
 		uploadButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				String filename = filePath.getText();
-				if(filename != null){
+
+				FileChooser fc = new FileChooser();
+				File selectedFile = null;
+				
+				fc.setTitle("Open Food List");
+				fc.getExtensionFilters().addAll(
+						new ExtensionFilter("Text Files", "*.txt"),
+						new ExtensionFilter("Comma Seperated Values", "*.csv"),
+						new ExtensionFilter("All Files", "*.*"));
+				
+					fc.setInitialDirectory(new File("application\\"));
+					
+				try {
+					selectedFile = fc.showOpenDialog(foodWindow);
+				} catch (IllegalArgumentException e) {
+					// Directory does not exist on users cpu, just open up a directory
+					fc.setInitialDirectory(null);
+					selectedFile = fc.showOpenDialog(foodWindow);
+				}
+
+				if (selectedFile != null) {
 					try{
-						foodData.loadFoodItems(filename);
+						foodData.loadFoodItems(selectedFile.getPath());
 						foodWindow.hide();
 					}catch(Exception e){
 						//inform user that

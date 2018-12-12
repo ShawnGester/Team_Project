@@ -110,7 +110,8 @@ public class PopUpMeal{
 				}
 				String mealName = nameInput.getText();
 				if(mealName != null && !mealName.trim().equals("")){
-					mealData.addMeal(new Meal(mealName, selectFoodList));
+					Meal newMeal = new Meal(mealName, selectFoodList);
+					mealData.addMeal(newMeal);
 					mealWindow.hide();
 				}else{
 					Label errorMeal = new Label("*Error: invalid name");

@@ -24,13 +24,15 @@ import javafx.scene.text.Font;
  */
 public class Main extends Application {
 	public FoodData foodData;
+	public MealData mealData;
 	public PrimaryGUI primaryGUI;
 	
 	
 	@Override
 	public void start(Stage primaryStage) {
 		this.foodData = new FoodData();
-		this.primaryGUI = new PrimaryGUI(foodData, primaryStage);
+		this.mealData = new MealData();
+		this.primaryGUI = new PrimaryGUI(foodData, mealData, primaryStage);
 	}
 	
 	public static void main(String[] args) {
