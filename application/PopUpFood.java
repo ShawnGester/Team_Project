@@ -36,15 +36,34 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
 
+/**
+ * This class manages the pop up window that adds food or uploads
+ * a file with food items.
+ * 
+ * @author Shawn Ge
+ * @author Danica Fliss
+ * @author Alex Fusco
+ * @author Cole Thompson
+ * @author Leah Witt
+ *
+ */
 public class PopUpFood {
+	//declare fields
 	Stage foodWindow;
 	private FoodData foodData;
 	boolean error1 = true;//error involved in adding food
 	boolean error2 = true;//error involved in uploading file
 	
+	/**
+	 * Public constructor - contains all the code to manage
+	 * the window
+	 * @param FoodData
+	 */
 	public PopUpFood(FoodData foodData){
+		//initialize field
 		this.foodData = foodData;
 		foodWindow = new Stage();
+		//base of window
 		foodWindow.setTitle("Create A Food Item");
 		BorderPane food = new BorderPane();
 		
@@ -59,7 +78,7 @@ public class PopUpFood {
 		Label upload = new Label("Upload New Food File");
 		upload.setFont(new Font(20));
 		
-		
+		//button to upload file of foods
 		Button uploadButton = new Button("Upload");
 		
 		//side the prompts new file to be uploaded
@@ -71,7 +90,7 @@ public class PopUpFood {
 		left.setCenter(uploadButton);
 		left.setPadding(new Insets(10,20,20,20));
 		BorderPane.setMargin(uploadButton, new Insets(35,0,0,0));
-		BorderPane.setAlignment(uploadButton, Pos.TOP_CENTER);//not sure if this is working
+		BorderPane.setAlignment(uploadButton, Pos.TOP_CENTER);
 		food.setLeft(left);
 		
 		
@@ -193,17 +212,34 @@ public class PopUpFood {
 			@Override
 			public void handle(ActionEvent event) {
 				//Create arbitrary 24 character long id
-				String id = UUID.randomUUID().toString();
-				id = id.replace("-", "");
-				id = id.substring(0,24); 
-
+				String id;
+				boolean validID = false;
+				FoodItem newFood;
+				
 				//get food name
 				String name = foodInput.getText();
+				
+				//create an id until it is unique
+				while(!validID){
+					try{
+						id = UUID.randomUUID().toString();
+						id = id.replace("-", "");
+						id = id.substring(0,24);
+						validID = true;
+						
+						//create new food
+						if(!name.trim().equals(""))
+							newFood = new FoodItem(id, name);
+						
+					}catch(Exception e){
+						//ignore
+					}
+				}
+
+				
 
 				try{
 					if(!name.trim().equals("")){
-						//create new food
-						FoodItem newFood = new FoodItem(id, name);
 						
 						//input nutrient values
 						newFood.addNutrient("calories", getValue(calorieInput.getText()));
@@ -216,25 +252,25 @@ public class PopUpFood {
 						foodData.addFoodItem(newFood);
 						
 						//close window
-            			foodWindow.hide();
-            		}else{ 
-            			//do not except a name if it has only whitespace characters
-            			throw new Exception();
-            		}
-            	}catch(Exception e){
-            		//prompt user to fix their mistake
-            		Label errorMessage = new Label("*Error: improper input fields");
-            		errorMessage.setFont(new Font(10));
-            		errorMessage.setTextFill(Color.RED);
+            					foodWindow.hide();
+            				}else{ 
+            					//do not except a name if it has only whitespace characters
+            					throw new Exception();
+            				}
+            			}catch(Exception e){
+            				//prompt user to fix their mistake
+            				Label errorMessage = new Label("*Error: improper input fields");
+            				errorMessage.setFont(new Font(10));
+            				errorMessage.setTextFill(Color.RED);
             		
-            		//only add an instance of the error message if not currently there
-            		if(error1){
-            			right.getChildren().add(3, errorMessage);
-            			error1 = false;
-            		}
-            	}
-            }
-	      });
+            				//only add an instance of the error message if not currently there
+            				if(error1){
+            					right.getChildren().add(3, errorMessage);
+            					error1 = false;
+            				}
+            			}
+          	 	 }
+	   	});
 		
 		Scene foodScene = new Scene(food, 600, 400);
 		foodWindow.setScene(foodScene);
@@ -246,11 +282,12 @@ public class PopUpFood {
 	 * checks to see if input value is a valid input. If there is no
 	 * input, the value is automatically set to 0.0. Throws exception
 	 * if parameter value cannot be parsed into a Double.
-	 * @param value
+	 * @param String
 	 * @return
 	 */
 	private Double getValue(String value){
 		if(value == null || value.equals("")) 
+			//if no value specified, automatically set value
 			return 0.0;
 		else
 			return Double.parseDouble(value);
