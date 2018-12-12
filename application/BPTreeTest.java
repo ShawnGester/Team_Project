@@ -220,5 +220,56 @@ public class BPTreeTest {
 		}
 		assertTrue(true);
 	}
+	
+	@Test
+	public void testLargeBrachingFactor() {
+		BPTree<Integer, Integer> tree = new BPTree<Integer, Integer>(10);
+		Random rndgen = new Random();
+		boolean passed = true;//Null assumption: Assume to pass until found to fail.
+		int size = 10000;//TODO: Change size for different tests.
+		
+		try {
+			//Puts numbers into list.
+			ArrayList<Integer> listKeys = new ArrayList<Integer>();
+			//ArrayList<Integer> listValues = new ArrayList<Integer>();
+			while(listKeys.size() < size) {
+				int num = rndgen.nextInt(size);
+				if(!listKeys.contains(num) && (num != Integer.MIN_VALUE)) {
+					listKeys.add(new Integer(num));
+				}
+			}
+			
+			//Puts numbers into tree.
+			for(int i = 0; i < listKeys.size(); i++) {
+				tree.insert(listKeys.get(i), new Integer(i));
+				//listValues.add(new Integer(i));
+			}
+			
+			String treeStr = tree.toString();
+			String[] treeArr = treeStr.split("\n");
+			int bttmLvl = treeArr.length - 1;
+			int previous = Integer.MIN_VALUE;
+			for(int i = 0; i < listKeys.size(); i++) {
+				int keyIndex = treeArr[bttmLvl].indexOf(String.valueOf(i));
+				if (!((keyIndex != -1) && (keyIndex > previous))) {
+					System.out.println("\nFAILED: key " + i + " was not found in correct spot.");
+					//System.out.println("Was added as " + listValues.get(i) + " element.\n");
+					passed = false;
+				}
+				previous = keyIndex;
+			}
+			
+			
+			if(!passed) {//Test failed.
+				System.out.println(tree);
+			}
+		} catch(Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			e.printStackTrace();
+		}
+		
+		assertTrue(passed);
+	}
 
 }

@@ -31,7 +31,6 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
     // for internal nodes of the tree
     private int branchingFactor;
     
-  
     /**
      * Public constructor
      * 
@@ -236,6 +235,7 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         	} else if(key.compareTo(this.keys.get(this.keys.size() - 1)) >= 0) {
         		//Belongs in last child.
         		this.children.get(this.keys.size()).insert(key, value);
+        		
         		if(this.children.get(this.keys.size()).isOverflow()) {
         			node = (InternalNode)this.children.get(this.keys.size()).split();
         		}
@@ -258,15 +258,24 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         		if(newKey.compareTo(this.keys.get(0)) < 0) {//Belongs in beginning.
         			this.keys.add(0, newKey);//Adds new key to node.
         			this.children.add(0, node.children.get(0));//Add child.
+        			if(this.children.size() == 1) {
+        				this.children.add(node.children.get(1));//Add child.
+        			}
             	} else if(newKey.compareTo(this.keys.get(this.keys.size() - 1)) >= 0) {
             		//Belongs at end.
             		this.keys.add(newKey);//Adds new key to node.
             		this.children.add(this.keys.size() - 1, node.children.get(0));//Adds child.
+            		if(this.children.size() == 1) {
+            			this.children.add(node.children.get(1));//Adds child.
+        			}
             	} else {//Belongs somewhere in between.
             		for(int i = 1; i < this.keys.size(); i++) {
             			if(newKey.compareTo(this.keys.get(i)) < 0) {
             				this.keys.add(i, newKey);//Adds new key to node.
             				this.children.add(i, node.children.get(0));//Add child.
+            				if(this.children.size() == 1) {
+                				this.children.add(node.children.get(1));//Add child.
+                			}
             				break;
             			}
             		}
@@ -293,7 +302,7 @@ public class BPTree<K extends Comparable<K>, V> implements BPTreeADT<K, V> {
         	//Puts half of the children into the left child, and leaves the other half in the right
         	//child. If the number of children is odd, then there is one more child put in the left
         	//child.
-        	for(int i = 0; i < this.children.size() / 2 + 1; i++) {
+        	for(int i = 0; i < (this.children.size() + 1) / 2 + 1; i++) {
         		leftChild.children.add(this.children.remove(0));
         	}
         	
