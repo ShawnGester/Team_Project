@@ -289,8 +289,11 @@ public class PopUpFood {
 		if(value == null || value.equals("")) 
 			//if no value specified, automatically set value
 			return 0.0;
-		else
+		)else if(Double.parseDouble(value)<0){
+			throw NullPointerException;
+		}else{
 			return Double.parseDouble(value);
+		}
 	}
 
 }
