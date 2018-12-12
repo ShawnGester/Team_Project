@@ -70,6 +70,7 @@ public class PrimaryGUI {
 	private boolean mealNotFoundFlag; 					// Flag for showing meal not found message
 	private int numMeals; 								// Number of meals in the program
 	private int numMealsDisplayed; 						// Number of meal items displayed
+	private PieChart chart;								// Pie chart for displaying meal analysis
 	
 	// Width and height (respectively) of screen that is displaying GUI
 	private static final double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth(); 
@@ -327,6 +328,11 @@ public class PrimaryGUI {
 				foodNameDetailsPane.setText("Food Name: " + selectedFoodName);
 				VBox nutrientVBox = new VBox();			// Holds nutrient labels
 				VBox nutrientValueVBox = new VBox(); 	// Holds nutrient values
+				
+				// If the chart for meal analysis is showing, remove it
+				if(chart != null) {
+					displayBPane.setBottom(null);
+				}
 				
 				// Nutrient labels for VBox on left side of BPane in Details Pane
 				Label foodIDLabel = new Label();
@@ -710,7 +716,7 @@ public class PrimaryGUI {
 		                new PieChart.Data("Carbs", carbs),
 		                new PieChart.Data("Fiber", fiber),
 		                new PieChart.Data("Protein", protein));
-		        PieChart chart = new PieChart(pieChartData);
+		        this.chart = new PieChart(pieChartData);
 		        
 		        // Set pie chart properties
 		        chart.setTitle("Meal Analysis");
