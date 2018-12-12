@@ -1,4 +1,4 @@
-  package application;
+package application;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,8 +43,8 @@ import javafx.stage.Stage;
 
 /**
  * Represents the Primary GUI that the user will interact with. Initializes all GUI objects in 
- * constructor.
- * @author Cole Thomosn
+ * constructor. Handles all action events as well as the addition of stages via pop-up windows.
+ * @author Cole Thomson
  * @author Shawn Ge
  * @author Alex Fusco
  * @author Danica Fliss
@@ -53,47 +53,53 @@ import javafx.stage.Stage;
  */
 public class PrimaryGUI {
 	
-	private FoodData foodData; // Food Data used in Meal Planner Program
-	private HashMap<String, FoodItem> foodItemsHMap;  // Hash Map of Food Items
-	private List<String> displayedFoodNamesList; //Food Names List
-	private List<String> foodFilterRules; //filter rules for food items
-	private boolean foodNotFoundFlag; //flag for showing food not found message
-	private int numFoodItems; // Number of food items in the program
-	private int numFoodsDisplayed; // Number of food items displayed
-	private String openFilePath; //filepath of file opened by user FIXME (assign)
+	// Food Related Fields
+	private FoodData foodData; 							// Food Data used in Meal Planner Program
+	private HashMap<String, FoodItem> foodItemsHMap;	// Food items
+	private List<String> displayedFoodNamesList; 		// Food names
+	private List<String> foodFilterRules; 				// Filter rules for food items
+	private boolean foodNotFoundFlag; 					// Flag for showing food not found message
+	private int numFoodItems; 							// Number of food items in the program
+	private int numFoodsDisplayed; 						// Number of food items displayed
 	
-	private MealData mealData; // Meal Data used in Meal Planner Program
-	private HashMap<String, Meal> mealItemsHMap; //Hash Map of meals
-	private List<String> displayedMealNamesList; //Meal Names List
-	private List<String> mealFilterRules; //filter rules for meal items
-	private boolean mealNotFoundFlag; //flag for showing meal not found message
-	private int numMeals; //Number of meals in the program
-	private int numMealsDisplayed; // Number of meal items displayed
+	// Meal Related Fields
+	private MealData mealData; 							// Meal Data used in Meal Planner Program
+	private HashMap<String, Meal> mealItemsHMap; 		// Meals
+	private List<String> displayedMealNamesList; 		// Meal names
+	private List<String> mealFilterRules; 				// Filter rules for meal items
+	private boolean mealNotFoundFlag; 					// Flag for showing meal not found message
+	private int numMeals; 								// Number of meals in the program
+	private int numMealsDisplayed; 						// Number of meal items displayed
 	
+	// Width and height (respectively) of screen that is displaying GUI
 	private static final double SCREEN_WIDTH = Screen.getPrimary().getVisualBounds().getWidth(); 
 	private static final double SCREEN_HEIGHT = Screen.getPrimary().getVisualBounds().getWidth();
 	
 	/**
-	 * Handles Primary GUI for Meal Planner program. Single stage with single scene that has
-	 * three main panes. First pane on left-hand side of screen is "Food Pane". Food Pane allows
-	 * for user to load, add, remove, filter and save food lists. The second pane in the middle
-	 * of the screen is "Details Pane". Details Pane displays output information to user. 
-	 * The third pane on the right-hand side of the screen is the "Meal Pane". Meal pane allows
-	 * users to create, remove, and view meals that are comprised of foods available in the
-	 * food list.
-	 * @param foodData - all of food items
+	 * Handles Primary GUI for Meal Planner program. Single stage with single scene (excluding 
+	 * generated pop-ups) that has three main panes. First pane on left-hand side of screen is 
+	 * "Food Pane". Food Pane allows for user to load, add, remove, filter and save food lists. 
+	 * The second pane in the middle of the screen is "Details Pane". Details Pane displays 
+	 * output information to user. Output information is considered food or meal information that
+	 * user can view but can not interact with. The third pane on the right-hand side of the screen
+	 * is the "Meal Pane". Meal pane allows users to create, remove, and view meals that are 
+	 * comprised of foods available in the food list.
+	 * 
+	 * @param foodData - all food items
 	 * @param primaryStage - primaryStage that contains primary scene
 	 */
 	public PrimaryGUI(FoodData foodData, MealData mealData, Stage primaryStage) {
 		try {
-			this.foodData = foodData; // FoodData instance
+			// Instantiate food related fields
+			this.foodData = foodData; 
 			this.foodItemsHMap = new HashMap<String, FoodItem>();
 			this.displayedFoodNamesList = new ArrayList<String>();
 			this.foodFilterRules = new ArrayList<String>();
 			this.foodNotFoundFlag = false;
 			this.numFoodItems = 0;
 			
-			this.mealData = mealData; // MealData instance
+			// Instantiate meal related fields
+			this.mealData = mealData;
 			this.mealItemsHMap = new HashMap<String, Meal>();
 			this.displayedMealNamesList = new ArrayList<String>();
 			this.mealFilterRules = new ArrayList<String>();
@@ -101,11 +107,11 @@ public class PrimaryGUI {
 			this.numMeals = 0;
 			
 			ScrollPane root = new ScrollPane(); 		// Primary Pane for GUI, allows scrolling
-			BorderPane boarderPane = new BorderPane();	// Structure for visual display	
+			BorderPane mainBPane = new BorderPane();	// Structure for visual display	
 			Scene scene = new Scene(root, SCREEN_WIDTH, SCREEN_HEIGHT); // Create Scene
 			
-			// Set BoarderPane on ScrollPane
-			root.setContent(boarderPane);	
+			// Set main BorderPane on ScrollPane
+			root.setContent(mainBPane);	
 			// Fit contents of ScrollPane to width of pane
 			root.setFitToWidth(true);		
 			// Allow ScrollPane to be pannable
@@ -119,55 +125,56 @@ public class PrimaryGUI {
 			 * Create GUI Objects
 			 */
                         
-			Label progNameLabel = new Label("Meal Planner"); // Name of program (top pane)
-			progNameLabel.setId("title");
-			Label displayPaneLabel = new Label("Details");	 // Heading for display (center pane)
-			BorderPane topBPane = new BorderPane(progNameLabel); // BPane for top of GUI
-			BorderPane centerBPane = new BorderPane(); // BPane for center of GUI
-			BorderPane displayBPane = new BorderPane(); //BPane to set center section of centerBPane
+			Label progNameLabel = new Label("Meal Planner"); 	// Name of program (top pane)
+			progNameLabel.setId("title"); 						// Set CSS Id
+			Label displayPaneLabel = new Label("Details"); 		// Header for display (center pane)
 			
-			// Set nested panes in main BoarderPane
-			boarderPane.setTop(topBPane);
-			boarderPane.setCenter(centerBPane);
+			BorderPane topBPane = new BorderPane(progNameLabel); 	// BPane for top of GUI
+			BorderPane centerBPane = new BorderPane(); 				// BPane for center of GUI
+			BorderPane displayBPane = new BorderPane(); 			// BPane nested in centerBPane 
 			
+			// Set nested panes in main BPane
+			mainBPane.setTop(topBPane); 
+			mainBPane.setCenter(centerBPane);
+			
+			// Set "Details" Label and nested BPane in center BPane 
 			centerBPane.setTop(displayPaneLabel);
 			centerBPane.setCenter(displayBPane);
-			BorderPane.setMargin(displayBPane, new Insets(30,10,10,10));
 			
-			
-			// Place "Details" Heading at Top-Left of center section of main BPane
+			// Format BPane objects
+			BorderPane.setMargin(displayBPane, new Insets(30,10,10,10)); 
 			BorderPane.setAlignment(displayPaneLabel, Pos.TOP_LEFT); 
 		
 			/*
 			 * Food Pane (left section of main BoarderPane)
 			 */
 			
-			VBox foodPaneVBox = new VBox(10.0); // VBox to hold food pane GUI objects
-			// Set Width of foodPaneVBox to 25% of screen width
+			VBox foodPaneVBox = new VBox(10.0); // Holds food pane GUI objects
+			
+			// Set Width of foodPaneVBox to 25% of screen width and format position
 			foodPaneVBox.setPrefWidth(SCREEN_WIDTH / 4);
-			// Place foodPaneVBox at Top-Left of left section of main BPane
 			foodPaneVBox.setAlignment(Pos.TOP_LEFT);
-			// Set padding of foodPaneVBox along left side
 			foodPaneVBox.setPadding(new Insets(0,0,0,10));
 			 
-			Button newFoodButton = new Button("+ New Food"); // Button for adding food to list
-			TextField queryFoodField = new TextField(); // Food query field
-			queryFoodField.setPromptText("Search for a food...");
-			ListView<String> foodListView = new ListView<String>(); // Filtered list of cur foods
-				
-			// Set Width of foodListView to ~24% of the screen width
-			foodListView.prefWidthProperty().set(SCREEN_WIDTH/4.2);
-			// Set Height of foodListView to ~14% of screen height
-			foodListView.setPrefHeight(SCREEN_HEIGHT/7);
+			Button newFoodButton = new Button("+ New Food"); 		// Upload food list or add food 
+			TextField queryFoodField = new TextField(); 			// Food query field
+			ListView<String> foodLView = new ListView<String>(); 	// Filtered list of cur foods
 			
+			// Set prompting text for user to search for a food
+			queryFoodField.setPromptText("Search for a food...");
+			
+				
+			// Set Width of food ListView to ~24% of the screen width
+			foodLView.prefWidthProperty().set(SCREEN_WIDTH/4.2);
+			// Set Height of food ListView to ~14% of screen height
+			foodLView.setPrefHeight(SCREEN_HEIGHT/7);
+			
+			Label foodPaneLabel = new Label("Foods"); // Heading for food pane (left pane)
 			Label dispFoodsLabel = new Label("Displaying 0 of 0 foods"); // # of total foods disp.
 			Label foodNameDetailsPane = new Label(); // Food Label used in details pane
 			Button displayFoodButton = new Button("Display Food"); 	// Button to display food details
-			Button downloadFoodButton = new Button("Download Food List"); // download list of foods
-			Label foodPaneLabel = new Label("Foods"); // Heading for food pane (left pane)
-			
-			// Creates filter section of food VBox
-			VBox filterVBox = new VBox(10.0);
+			Button downloadFoodButton = new Button("Download Food List"); // Download list of foods
+			VBox foodFilterVBox = new VBox(10.0); // Holds food filtering Nodes
 			
 			ObservableList<String> filterOptions = FXCollections.observableArrayList(
 					"Calories",
@@ -179,7 +186,7 @@ public class PrimaryGUI {
 			
 			ComboBox<String> filtersCBox = new ComboBox<String>(filterOptions); // Filter CBox
 			
-			// Set default value of foodFilterCBox to prompt user to select a filter
+			// Set prompting text for user to select a filter
 			filtersCBox.setPromptText("Select a filter");
 			
 			ObservableList<String> foodCompOptions = FXCollections.observableArrayList(
@@ -188,68 +195,73 @@ public class PrimaryGUI {
 					"<="
 				); // Types of comparisons available for filters
 			
-			// ComboBox of comparison operators to determine food filter criteria 
-			ComboBox<String> compFiltersCBox = new ComboBox<String>(foodCompOptions);  
+			ComboBox<String> compFiltersCBox = new ComboBox<String>(foodCompOptions); // (==,<=,>=) 
 			
-			// Set default value of foodCompFiltersCBox to "="
+			// Set default value of foodCompFiltersCBox to "=="
 			compFiltersCBox.setValue("==");
 			
-			TextField filterValue = new TextField(""); // user inputs filter value
+			TextField filterValue = new TextField(""); // value for filter to use for comparisons
 			
 			// Set Width of foodFilterValue 
 			filterValue.setPrefWidth(100);
 			
 			Button foodAddFilterButton = new Button("Add"); // Applies filter and adds to list
-			HBox filterHBox = new HBox(10); // HBox to hold group of food filter GUI objects
-			ListView<String> filterLView = new ListView<String>(); // list of applied filters
+			HBox filterHBox = new HBox(10); // Holds group of food filter GUI objects
+			ListView<String> filterLView = new ListView<String>(); // List of applied filters
 			
 			// Set Height of foodFilterLView to ~9% of screen height
 			filterLView.setPrefHeight(SCREEN_HEIGHT/11);
 			
-			HBox buttonsHBox = new HBox(10); // HBox to hold "Edit" and "Delete" buttons
-			Button foodDeleteFilterButton = new Button("Delete"); 	// Button to delete a filter
+			HBox buttonsHBox = new HBox(10); // Holds "Edit" and "Delete" buttons
+			Button foodDeleteFilterButton = new Button("Delete"); // Button to delete a filter
 			
 			/**
 			 * EVENT HANDLERS FOOD PANE 
 			 */
 			
-			// New Food Button event handler
+			// "New Food" Button clicked
 			newFoodButton.setOnAction((ae) -> {
 
-				new PopUpFood(foodData);
-
+				new PopUpFood(foodData); // Pop-up for user to handle food addition
+				
+				// Update list of food items [after user inputs food item(s)]
 				updateFoodNamesList(foodData.getAllFoodItems());
-				foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
-
+				foodLView.setItems(FXCollections.observableList(displayedFoodNamesList));
+				
+				// Update list by applying current filters to food list
 				updateFoodNamesList(foodData.filterByNutrients(foodFilterRules));
-				foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
-				// update size of food list and number of foods displayed
+				foodLView.setItems(FXCollections.observableList(displayedFoodNamesList));
+				
+				// Update size of food list and number of foods displayed
 				updateFoodListSize(dispFoodsLabel);
-
 			});
 			
-			// Search for a food Field
+			// Query food in list by text 
 			queryFoodField.setOnAction((ae) -> {
-				String searchedFood = queryFoodField.getText();
+				
+				String searchedFood = queryFoodField.getText(); // User's text to use as query
+				
+				// Update list by applying user's text as a filter
 				updateFoodNamesList(foodData.filterByName(searchedFood));
-				foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
-				//update size of food list and number of foods displayed
+				foodLView.setItems(FXCollections.observableList(displayedFoodNamesList));
+				
+				// Update size of food list and number of foods displayed
 	            updateFoodListSize(dispFoodsLabel);
 	            
-				// if no foods match the search
+				// If no foods match the search
 				if(foodData.filterByName(searchedFood).size()==0) {
-					if(!this.foodNotFoundFlag) {
-						// inform user that
+					if (!this.foodNotFoundFlag) {
+						// Inform user that no foods exist
 						Label foodDNEErrorMessage = new Label("*Error: no foods exist.");
 						foodDNEErrorMessage.setFont(new Font(10));
 						foodDNEErrorMessage.setTextFill(Color.RED);
 						foodPaneVBox.getChildren().add(2, foodDNEErrorMessage);
 						this.foodNotFoundFlag = true;
-						}
+					}
 				}
-				// else food doesn't exist, display message
+				// Else clear error message if up
 				else {
-					//if error message is up, delete it and reset flag
+					// If error message is up, delete it and reset flag
 					if(this.foodNotFoundFlag) {
 						foodPaneVBox.getChildren().remove(2);
 						this.foodNotFoundFlag = false;
@@ -257,60 +269,74 @@ public class PrimaryGUI {
 				}	
 			}); 
 			
-			// Add Filter to list of rules
+			// Add comparator-style filter to list of rules
 			foodAddFilterButton.setOnAction((ae) -> {
-				Double comparableValue = Double.parseDouble(filterValue.getText()); //FIXME NumberFormatException
-				String comparator = compFiltersCBox.getValue();
-				String nutrientFilter = filtersCBox.getValue();
+				
+				try {
+					Double comparableValue = Double.parseDouble(filterValue.getText()); // comp val
+					String comparator = compFiltersCBox.getValue(); // (==,<=,>=) selected
+					String nutrientFilter = filtersCBox.getValue(); // nutrient to filter by
 
-				if (nutrientFilter != null && comparableValue >= 0) {
-					String rule = nutrientFilter + " " + comparator + " " + comparableValue;
-					// If the rule already exists, don't add it
-					if (!this.foodFilterRules.contains(rule)) {
-						this.foodFilterRules.add(rule);
-						updateFoodNamesList(this.foodData.filterByNutrients(this.foodFilterRules));
-						foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
-						filterLView.setItems(FXCollections.observableList(foodFilterRules));
-						filterValue.setText("");
-						//update size of food list and number of foods displayed
-			            updateFoodListSize(dispFoodsLabel);
+					// If nutrient filter is selected and value to compare to is not negative
+					if (nutrientFilter != null && comparableValue >= 0) {
+						String rule = nutrientFilter + " " + comparator + " " + comparableValue;
+						// If the rule already exists, don't add it
+						if (!this.foodFilterRules.contains(rule)) {
+							this.foodFilterRules.add(rule);
+							
+							// Update list by applying food query rule
+							updateFoodNamesList(this.foodData.filterByNutrients(this.foodFilterRules));
+							foodLView.setItems(FXCollections.observableList(displayedFoodNamesList));
+							filterLView.setItems(FXCollections.observableList(foodFilterRules));
+							filterValue.setText("");
+							
+							// update size of food list and number of foods displayed
+							updateFoodListSize(dispFoodsLabel);
+						}
 					}
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
 				}
 			});
 			
 			// Delete Filter from list of rules (one at a time)
 			foodDeleteFilterButton.setOnAction((ae) -> {
+				
 				String ruleToDelete = filterLView.getSelectionModel().getSelectedItem();
-				//find and delete rule from rule list
+				// Find and delete rule from rule list
 				for(int i = 0; i < foodFilterRules.size(); i++) {
 					if(ruleToDelete.equals(foodFilterRules.get(i))) {
 						foodFilterRules.remove(i);
 						break;
 					}
 				}
+				// Update list after removing food query rule
 				updateFoodNamesList(this.foodData.filterByNutrients(this.foodFilterRules));
-				foodListView.setItems(FXCollections.observableList(displayedFoodNamesList));
+				foodLView.setItems(FXCollections.observableList(displayedFoodNamesList));
 				filterLView.setItems(FXCollections.observableList(foodFilterRules));
 				filterValue.setText("");
+				
 				//update size of food list and number of foods displayed
 	            updateFoodListSize(dispFoodsLabel);
 			});
 			
-			// Display Food Button to the detail pane
+			// Display food data to the detail pane
 			displayFoodButton.setOnAction((ae) -> {
 				
-				String selectedFoodName = foodListView.getSelectionModel().getSelectedItem();
+				String selectedFoodName = foodLView.getSelectionModel().getSelectedItem(); // Food
 				foodNameDetailsPane.setText("Food Name: " + selectedFoodName);
-				VBox nutrientVBox = new VBox();			// VBox to hold nutrient labels
-				VBox nutrientValueVBox = new VBox(); 	// VBox to hold nutrient values
-				// Labels for VBox on left side of BPane in Details Pane
-				Label foodIDLabel = new Label();		// Selected food ID Label
+				VBox nutrientVBox = new VBox();			// Holds nutrient labels
+				VBox nutrientValueVBox = new VBox(); 	// Holds nutrient values
+				
+				// Nutrient labels for VBox on left side of BPane in Details Pane
+				Label foodIDLabel = new Label();
 				Label caloriesLabel = new Label();
 				Label fatLabel = new Label();
 				Label carbLabel = new Label();
 				Label fiberLabel = new Label();
 				Label proteinLabel = new Label();
-				// Labels for VBox on right side of BPane in Details Pane (nutrient Vals)
+				
+				// Nutrient value labels for VBox on right side of BPane in Details Pane 
 				Label caloriesVal= new Label();
 				Label fatVal = new Label();
 				Label carbVal = new Label();
@@ -318,6 +344,7 @@ public class PrimaryGUI {
 				Label proteinVal = new Label();
 				
 				FoodItem selectedFood = this.foodItemsHMap.get(selectedFoodName); // selected food
+				
 				// Get attributes about the food
 				String foodID = selectedFood.getID();
 				double calories = selectedFood.getNutrientValue("calories");
@@ -325,12 +352,14 @@ public class PrimaryGUI {
 				double carbs = selectedFood.getNutrientValue("carbohydrate");
 				double fiber = selectedFood.getNutrientValue("fiber");
 				double protein = selectedFood.getNutrientValue("protein");
+				
 				// Get attribute labels padded with periods on right side
 				String calLabelText = padStrWithPer("Calories (kcal):",200);
 				String fatLabelText = padStrWithPer("Fat (g):",200);
 				String carbLabelText = padStrWithPer("Carbs (g):",200);
 				String fiberLabelText = padStrWithPer("Fiber (g):",200);
 				String proteinLabelText = padStrWithPer("Protein (g):",200);
+				
 				// Set text of Food attribute labels
 				foodIDLabel.setText("Food ID: " + foodID);
 				caloriesLabel.setText(calLabelText);
@@ -338,6 +367,7 @@ public class PrimaryGUI {
 				carbLabel.setText(carbLabelText);
 				fiberLabel.setText(fiberLabelText);
 				proteinLabel.setText(proteinLabelText);
+				
 				// Set text of Food value labels
 				caloriesVal.setText("" + calories);
 				fatVal.setText("" + fat);
@@ -359,21 +389,22 @@ public class PrimaryGUI {
 				
 				nutrientVBox.setSpacing(15);		// Spacing between labels
 				nutrientValueVBox.setSpacing(15);	// Spacing between values
+				
 				// Set width of Panes in Display Pane
 				nutrientVBox.prefWidthProperty().set(centerBPane.getWidth()*.65);
 				nutrientValueVBox.prefWidthProperty().set(centerBPane.getWidth()*.2);
+				
 				// Set alignments in panes and margins for VBoxes 
 				BorderPane.setAlignment(foodNameDetailsPane, Pos.TOP_CENTER);
 				BorderPane.setAlignment(nutrientValueVBox, Pos.TOP_LEFT);
 				BorderPane.setMargin(nutrientVBox, new Insets(35,0,0,10));
 				BorderPane.setMargin(nutrientValueVBox, new Insets(35,0,0,0));
-
 			});
 			
-			//Download FoodButton download list of foods
+			// Download list of foods to file
 			downloadFoodButton.setOnAction((ae) -> {
-				FileChooser fc = new FileChooser();
-				File selectedFile = null;
+				FileChooser fc = new FileChooser(); // Allow use of file explorer
+				File selectedFile = null;			// File to save to
 				List<FoodItem> foodList = foodData.getAllFoodItems();
 				
 				fc.setTitle("Download Food List");
@@ -382,18 +413,18 @@ public class PrimaryGUI {
 						new ExtensionFilter("Comma Seperated Values", "*.csv"),
 						new ExtensionFilter("All Files", "*.*"));
 				
-			
-					fc.setInitialDirectory(new File("application\\"));
-					fc.setInitialFileName(this.openFilePath); //FIXME does this work
+				// Set initial directory shown as application (if exists)
+				fc.setInitialDirectory(new File("application\\"));
 					
 				try {
 					selectedFile = fc.showSaveDialog(primaryStage);
 				} catch (IllegalArgumentException e) {
-					// Directory does not exist on users cpu, just open up a directory
+					// Directory does not exist on users cpu, just open standard directory
 					fc.setInitialDirectory(null);
 					selectedFile = fc.showSaveDialog(primaryStage);
 				}
-
+				
+				// If a file was selected, write food list data to that file
 				if (selectedFile != null) {
 					FileWriter fileWriter = null;
 					PrintWriter printWriter = null; 
@@ -416,7 +447,6 @@ public class PrimaryGUI {
 		                } finally {
 		                	printWriter.close();
 		                }
-					
 				} 
 			});
 			
@@ -427,47 +457,41 @@ public class PrimaryGUI {
 			buttonsHBox.getChildren().addAll(foodDeleteFilterButton);
 			
 			// Set all elements onto filter GUI to return
-			filterVBox.getChildren().addAll(filtersCBox, filterHBox, filterLView, buttonsHBox);
-			
-			
+			foodFilterVBox.getChildren().addAll(filtersCBox, filterHBox, filterLView, buttonsHBox);
 
-			
-			
 			// Set GUI Objects on Food Pane
-			foodPaneVBox.getChildren().addAll(newFoodButton, queryFoodField, foodListView, dispFoodsLabel,
-					filterVBox, displayFoodButton, downloadFoodButton, foodPaneLabel);
+			foodPaneVBox.getChildren().addAll(newFoodButton, queryFoodField, foodLView, dispFoodsLabel,
+					foodFilterVBox, displayFoodButton, downloadFoodButton, foodPaneLabel);
 			
 			/**
 			 * Meal Pane (right section of main BoarderPane)
 			 */
-			VBox mealPaneVBox = new VBox(10.0); // VBox to hold meal pane GUI objects
 			
-			// Set Width of mealPaneVBox to 25% of screen width
+			VBox mealPaneVBox = new VBox(10.0); // Holds meal pane of GUI objects
+			
+			// Set Width of mealPaneVBox to 25% of screen width and format position
 			mealPaneVBox.setPrefWidth(SCREEN_WIDTH / 4);
-			// Place mealPaneVBox at Top-Left of left section of main BPane
 			mealPaneVBox.setAlignment(Pos.TOP_LEFT);
-			// Set padding of mealPaneVBox along left side
 			mealPaneVBox.setPadding(new Insets(0,0,0,10));
 			 
-			Button newMealButton = new Button("+ New Meal"); // Button for creating new meal
-			TextField queryMealField = new TextField(); // Meal query field
-			queryMealField.setPromptText("Search for a meal...");
+			Button newMealButton = new Button("+ New Meal"); 		// Create meal
+			TextField queryMealField = new TextField(); 			// Meal query field
 			ListView<String> mealListView = new ListView<String>(); // Filtered list of cur meals
+
+			// Set prompting text for user to search for a meal
+			queryMealField.setPromptText("Search for a meal...");
 		
 			// Set Width of mealListView to ~24% of the screen width
 			mealListView.prefWidthProperty().set(SCREEN_WIDTH/4.2);
 			// Set Height of mealListView to ~14% of screen height
 			mealListView.setPrefHeight(SCREEN_HEIGHT/7);
 			
-			Label dispMealsLabel = new Label("Displaying 0 of 0 meals"); // # of total meals disp.
-
-			Button displayMealButton = new Button("Analyze Meal"); 	// Button to analyze/disp. meal
-			Label mealNameDetailsPane = new Label();
-			Label blankLabel = new Label(""); // Blank label for formatting
 			Label mealPaneLabel = new Label("Meals"); // Heading for meal pane (right pane)
-			
-			// Creates filter section of meal VBox
-			VBox mealFilterVBox = new VBox(10.0);
+			Label dispMealsLabel = new Label("Displaying 0 of 0 meals"); // # of total meals disp.
+			Label mealNameDetailsPane = new Label(); // Meal Label used in details pane
+			Label blankLabel = new Label(""); // Blank label for formatting
+			Button displayMealButton = new Button("Analyze Meal"); 	// Button to analyze/disp. meal			
+			VBox mealFilterVBox = new VBox(10.0); // Holds meal filtering Nodes
 			
 			ObservableList<String> mealFilterOptions = FXCollections.observableArrayList(
 					"Calories",
@@ -513,28 +537,36 @@ public class PrimaryGUI {
 			 * EVENT HANDLERS FOR MEAL PANE 
 			 */
 
-			// New Meal Button Event Handler
+			// "New Meal" Button clicked
 			newMealButton.setOnAction((ae) -> {
 
-				new PopUpMeal(foodData.getAllFoodItems(), mealData);
+				new PopUpMeal(foodData.getAllFoodItems(), mealData); // Pop-up for meal addition
+				
+				// Update list od meal items (after addition of a meal)
 				updateMealNamesList(mealData.getMealList());
 				mealListView.setItems(FXCollections.observableList(displayedMealNamesList));
 				
+				// Update list by applying current filters to food list
 				updateMealNamesList(mealData.filterByNutrient(mealFilterRules));
 				mealListView.setItems(FXCollections.observableList(displayedMealNamesList));
+				
 				//update size of meal list and number of meals displayed
 				updateMealListSize(dispMealsLabel);
 			});
 			
-			// Search for a meal field
+			// Query meal is list by text
 			queryMealField.setOnAction((ae) -> {
-				String searchedMeal = queryMealField.getText();
+				
+				String searchedMeal = queryMealField.getText(); //User's text to use a query
+				
+				// Update list by applying user's text as a filter
 				updateMealNamesList(mealData.filterByName(searchedMeal));
 				mealListView.setItems(FXCollections.observableList(displayedMealNamesList));
-				// update size of meal list and number of meals displayed
+				
+				// Update size of meal list and number of meals displayed
 				updateMealListSize(dispMealsLabel);
 				
-				// if no meals match the search
+				// If no meals match the search
 				if (mealData.filterByName(searchedMeal).size() == 0) {
 					if(!this.mealNotFoundFlag) {
 						// inform user that no meals exist 
@@ -545,86 +577,93 @@ public class PrimaryGUI {
 						this.mealNotFoundFlag = true;
 					}
 				}
-				// else meal doesn't exist, display message
+				// Else meal doesn't exist, display message
 				else {
-					// if error message is up, delete it and reset flag
+					// If error message is up, delete it and reset flag
 					if (this.mealNotFoundFlag) {
 						mealPaneVBox.getChildren().remove(2);
 						this.mealNotFoundFlag = false;
 					}
 				}
-				
 			});
 			
 			
-			// Add Filter to list of rules for meals
+			// Add comparator-style filter to list of rules
 			mealFilterAddButton.setOnAction((ae) -> {
 
-				Double comparableValue = Double.parseDouble(mealFilterValue.getText()); // FIXME NumberFormatException
-				String comparator = mealCompFiltersCBox.getValue();
-				String nutrientFilter = mealFiltersCBox.getValue();
+				try {
+					Double comparableValue = Double.parseDouble(mealFilterValue.getText()); 
+					String comparator = mealCompFiltersCBox.getValue(); // (==,<=,>=) selected
+					String nutrientFilter = mealFiltersCBox.getValue(); // nutrient to filter by
 
-				if (nutrientFilter != null && comparableValue >= 0) {
-					String rule = nutrientFilter + " " + comparator + " " + comparableValue;
-					// If the rule already exists, don't add it
-					if (!this.mealFilterRules.contains(rule)) {
-						this.mealFilterRules.add(rule);
-						updateMealNamesList(this.mealData.filterByNutrient(this.mealFilterRules));
-						mealListView.setItems(FXCollections.observableList(displayedMealNamesList));
-						mealFilterLView.setItems(FXCollections.observableList(mealFilterRules));
-						mealFilterValue.setText("");
-						// update size of meal list and number of meal displayed
-						updateMealListSize(dispMealsLabel);
+					// If nutrient filter is selected and value to compare is not negative
+					if (nutrientFilter != null && comparableValue >= 0) {
+						String rule = nutrientFilter + " " + comparator + " " + comparableValue;
+						// If the rule already exists, don't add it
+						if (!this.mealFilterRules.contains(rule)) {
+							this.mealFilterRules.add(rule);
+							updateMealNamesList(this.mealData.filterByNutrient(this.mealFilterRules));
+							mealListView.setItems(FXCollections.observableList(displayedMealNamesList));
+							mealFilterLView.setItems(FXCollections.observableList(mealFilterRules));
+							mealFilterValue.setText("");
+							
+							// update size of meal list and number of meal displayed
+							updateMealListSize(dispMealsLabel);
+						}
 					}
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
 				}
-			
 			});
 
 			// Delete Filter from list of meal rules (one at a time)
 			mealDeleteFilterButton.setOnAction((ae) -> {
+				
 				String ruleToDelete = mealFilterLView.getSelectionModel().getSelectedItem();
-				// find and delete rule from rule list
+				// Find and delete rule from rule list
 				for (int i = 0; i < mealFilterRules.size(); i++) {
 					if (ruleToDelete.equals(mealFilterRules.get(i))) {
 						mealFilterRules.remove(i);
 						break;
 					}
 				}
+				// Update list after removing meal query rule
 				updateMealNamesList(this.mealData.filterByNutrient(this.mealFilterRules));
 				mealListView.setItems(FXCollections.observableList(displayedMealNamesList));
 				mealFilterLView.setItems(FXCollections.observableList(mealFilterRules));
 				mealFilterValue.setText("");
 				// update size of meal list and number of meals displayed
 				updateMealListSize(dispMealsLabel);
+				
 			});
-
-			
-			
-			//FIXME I AM HERE
-			
 			
 			// Display Meal Button to the detail pane
 			displayMealButton.setOnAction((ae) -> {
 
 				String selectedMealName = mealListView.getSelectionModel().getSelectedItem();
 				mealNameDetailsPane.setText("Meal Name: " + selectedMealName);
-				BorderPane nutrientBPane = new BorderPane(); //BPane in left of display pane
-				BorderPane mealFoodsBPane = new BorderPane(); //BPane in the right of display pane
-				Label nutrientLabel = new Label("Nutrients");
-				Label foodListLabel = new Label("Foods");
+				
+				BorderPane nutrientBPane = new BorderPane(); 	// BPane in left of display pane
+				BorderPane mealFoodsBPane = new BorderPane(); 	// BPane in right of display pane
+				Label nutrientLabel = new Label("Nutrients");	// Nutrient data displayed below
+				Label foodListLabel = new Label("Foods");		// List of foods displayed below
 				ListView<String> mealFoodsListView = new ListView<String>(); // List of foods in meal
+				
 				// Set Width of mealFoodsListView to ~20% of the screen width
 				mealFoodsListView.prefWidthProperty().set(SCREEN_WIDTH/5.5);
 				// Set Height of mealFoodsListView to ~14% of screen height
 				mealFoodsListView.prefHeightProperty().set(SCREEN_HEIGHT/7);
+				
 				VBox nutrientVBox = new VBox(); // VBox to hold nutrient labels
 				VBox nutrientValueVBox = new VBox(); // VBox to hold nutrient values
+				
 				// Labels for VBox on left side of BPane in Details Pane
 				Label caloriesLabel = new Label();
 				Label fatLabel = new Label();
 				Label carbLabel = new Label();
 				Label fiberLabel = new Label();
 				Label proteinLabel = new Label();
+				
 				// Labels for VBox on right side of BPane in nutrients BPane (nutrient Vals)
 				Label caloriesVal = new Label();
 				Label fatVal = new Label();
@@ -642,18 +681,21 @@ public class PrimaryGUI {
 				double carbs = selectedMeal.getNutrientValue("carbohydrate");
 				double fiber = selectedMeal.getNutrientValue("fiber");
 				double protein = selectedMeal.getNutrientValue("protein");
+				
 				// Get attribute labels padded with periods on right side
 				String calLabelText = padStrWithPer("Calories (kcal):", 200);
 				String fatLabelText = padStrWithPer("Fat (g):", 200);
 				String carbLabelText = padStrWithPer("Carbs (g):", 200);
 				String fiberLabelText = padStrWithPer("Fiber (g):", 200);
 				String proteinLabelText = padStrWithPer("Protein (g):", 200);
+				
 				// Set text of Food attribute labels
 				caloriesLabel.setText(calLabelText);
 				fatLabel.setText(fatLabelText);
 				carbLabel.setText(carbLabelText);
 				fiberLabel.setText(fiberLabelText);
 				proteinLabel.setText(proteinLabelText);
+				
 				// Set text of Meal value labels
 				caloriesVal.setText("" + calories);
 				fatVal.setText("" + fat);
@@ -661,6 +703,7 @@ public class PrimaryGUI {
 				fiberVal.setText("" + fiber);
 				proteinVal.setText("" + protein);
 				
+				// Make pie chart to display nutrient data
 				ObservableList<PieChart.Data> pieChartData =
 		                FXCollections.observableArrayList(
 		                new PieChart.Data("Fat", fat),
@@ -668,6 +711,8 @@ public class PrimaryGUI {
 		                new PieChart.Data("Fiber", fiber),
 		                new PieChart.Data("Protein", protein));
 		        PieChart chart = new PieChart(pieChartData);
+		        
+		        // Set pie chart properties
 		        chart.setTitle("Meal Analysis");
 		        chart.setLabelLineLength(10);
 		        chart.setLegendSide(Side.LEFT);
@@ -700,9 +745,11 @@ public class PrimaryGUI {
 				displayBPane.setBottom(chart);
 				nutrientVBox.setSpacing(15); // Spacing between labels
 				nutrientValueVBox.setSpacing(15); // Spacing between values
+				
 				// Set width of Panes in Display Pane
 				nutrientVBox.prefWidthProperty().set(centerBPane.getWidth() * 0.32);
 				nutrientValueVBox.prefWidthProperty().set(centerBPane.getWidth() * 0.13);
+				
 				// Set alignments in panes and margins for Nodes
 				BorderPane.setAlignment(mealNameDetailsPane, Pos.TOP_CENTER);
 				BorderPane.setAlignment(nutrientValueVBox, Pos.TOP_LEFT);
@@ -733,11 +780,11 @@ public class PrimaryGUI {
 					mealFilterVBox, displayMealButton, blankLabel, mealPaneLabel);
 			
 			// Set Food (left) and Meal (right) pane in main BoarderPane
-			boarderPane.setLeft(foodPaneVBox);
-			boarderPane.setRight(mealPaneVBox);
+			mainBPane.setLeft(foodPaneVBox);
+			mainBPane.setRight(mealPaneVBox);
 			
 			// Set IDs for application.css to use for formatting
-			boarderPane.setId("root");
+			mainBPane.setId("root");
 			root.setId("scrollPane");
 			mealPaneLabel.setId("meals");
 			mealPaneVBox.setId("right");
@@ -771,14 +818,14 @@ public class PrimaryGUI {
 	}
 	/**
 	 * Helper method for updating the label that displays number of foods being viewed
-	 * @param displayLabel
+	 * @param displayLabel updated label of number of foods that are displayed out of total
 	 */
 	private void updateFoodListSize(Label displayLabel) {
+		
 		this.numFoodItems = foodData.getAllFoodItems().size();
 		this.numFoodsDisplayed = this.displayedFoodNamesList.size();
 		displayLabel.setText("Displaying " + this.numFoodsDisplayed 
-				+ " of " + this.numFoodItems + " foods"); // # of total foods disp.
-		
+				+ " of " + this.numFoodItems + " foods"); // # of total foods disp.	
 	}
 	
 	/**
@@ -798,20 +845,19 @@ public class PrimaryGUI {
 	}
 	/**
 	 * Helper method for updating the label that displays number of meals being viewed
-	 * @param displayLabel
+	 * @param displayLabel updated label of number of meals that are displayed out of total
 	 */
 	private void updateMealListSize(Label displayLabel) {
 		this.numMeals = mealData.getMealList().size();
 		this.numMealsDisplayed = this.displayedMealNamesList.size();
 		displayLabel.setText("Displaying " + this.numMealsDisplayed 
-				+ " of " + this.numMeals + " meals"); // # of total foods disp.
-		
+				+ " of " + this.numMeals + " meals"); // # of total foods disp.	
 	}
 	/**
 	 * Helper method to get list of food names from list of foods for use in diplaying the
 	 * foods in a meal
-	 * @param foods
-	 * @return
+	 * @param foods List of foods
+	 * @return foodNames list of food names
 	 */
 	private List<String> getFoodNamesFromMeal(List<FoodItem> foods) {
 		List<String> foodNames = new ArrayList<String>();
@@ -823,9 +869,9 @@ public class PrimaryGUI {
 	
 	/**
 	 * Helper method that pads string with periods
-	 * @param str
-	 * @param totalLength
-	 * @return
+	 * @param str string to pad with periods
+	 * @param totalLength total length of string to be after padding
+	 * @return str updated string with padding
 	 */
 	private String padStrWithPer(String str, int totalLength) {
 
