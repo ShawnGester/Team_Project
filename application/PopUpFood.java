@@ -162,7 +162,7 @@ public class PopUpFood {
 					try{
 						foodData.loadFoodItems(selectedFile.getPath());
 						foodWindow.hide();
-					}catch(Exception e){
+					}catch(NullPointerException e){
 						//inform user that
 						Label fileErrorMessage = new Label("*Error: unable to upload file");
 						fileErrorMessage.setFont(new Font(10));
@@ -173,6 +173,16 @@ public class PopUpFood {
 							text.getChildren().add(2, fileErrorMessage);
 							error2 = false;
 						}
+					}catch(NumberFormatException e){
+						Label formatError = new Label("WARNING - FORMAT ERROR: may not have uploaded all food items");
+						formatError.setFont(new Font(25));
+						formatError.setTextFill(Color.RED);
+						formatError.setWrapText(true);
+						formatError.setPadding(new Insets(10,10,10,10));
+						Scene problem = new Scene(formatError, 300, 200);
+						foodWindow.setScene(problem);
+					}catch(Exception e){
+						foodWindow.hide();
 					}
 				}
 			}
