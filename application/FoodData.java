@@ -288,35 +288,38 @@ public class FoodData implements FoodDataADT<FoodItem> {
     * @return a list of all of the foods meeting the filter requirements
     */
     @Override
-    public List<FoodItem> filterByNutrients(List<String> rules) {
-    	//need to add a try catch block for parsing doubles for the value of the rules
-    	//rules in the format "nutrient comparator value"
-    	List<List<FoodItem>> mergeList = new ArrayList<List<FoodItem>>(); //storing the food lists from each filter
-    	for(String rule : rules) {
-    		String[] splitList = rule.split(" ");
-    			if(splitList[0].toLowerCase().equals("calories")) {
-    				mergeList.add(indexes.get("calories").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
-    			}
-    			else if(splitList[0].toLowerCase().equals("fat")) {
-    				mergeList.add(indexes.get("fat").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
-    			}
-    			else if(splitList[0].toLowerCase().equals("carbohydrate")) {
-    				mergeList.add(indexes.get("carbohydrate").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
-    			}
-    			else if(splitList[0].toLowerCase().equals("fiber")) {
-    				mergeList.add(indexes.get("fiber").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
-    			}
-    			else if(splitList[0].toLowerCase().equals("protein")) {
-    				mergeList.add(indexes.get("protein").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
-    			}
-    	}
-    	List<FoodItem> retList = new ArrayList<FoodItem>(foodItemList);
-    	for(List<FoodItem> filterList : mergeList) { //takes the intersection of the lists of food from each filter
-    		retList.retainAll(filterList);
-    	}
-    	retList.sort((FoodItem f1, FoodItem f2)-> f1.getName().toUpperCase().compareTo(f2.getName().toUpperCase()));
-    	return retList;
-    }
+	public List<FoodItem> filterByNutrients(List<String> rules) {
+
+		// rules in the format "nutrient comparator value"
+		List<List<FoodItem>> mergeList = new ArrayList<List<FoodItem>>(); // storing the food lists from each filter
+		try {
+			for (String rule : rules) {
+				String[] splitList = rule.split(" ");
+				if (splitList[0].toLowerCase().equals("calories")) {
+					mergeList.add(indexes.get("calories").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
+				} else if (splitList[0].toLowerCase().equals("fat")) {
+					mergeList.add(indexes.get("fat").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
+				} else if (splitList[0].toLowerCase().equals("carbohydrate")) {
+					mergeList.add(
+							indexes.get("carbohydrate").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
+				} else if (splitList[0].toLowerCase().equals("fiber")) {
+					mergeList.add(indexes.get("fiber").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
+				} else if (splitList[0].toLowerCase().equals("protein")) {
+					mergeList.add(indexes.get("protein").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
+				}
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+		List<FoodItem> retList = new ArrayList<FoodItem>(foodItemList);
+		for (List<FoodItem> filterList : mergeList) { // takes the intersection of the lists of food from each
+														// filter
+			retList.retainAll(filterList);
+		}
+		retList.sort((FoodItem f1, FoodItem f2) -> f1.getName().toUpperCase().compareTo(f2.getName().toUpperCase()));
+		return retList;
+
+	}
 
     /**
      * This method adds a food item to the foodITemList
