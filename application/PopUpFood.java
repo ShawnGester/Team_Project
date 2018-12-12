@@ -275,7 +275,7 @@ public class PopUpFood {
 	/**
 	 * checks to see if input value is a valid input. If there is no
 	 * input, the value is automatically set to 0.0. Throws exception
-	 * if parameter value cannot be parsed into a Double or is negative.
+	 * if parameter value cannot be parsed into a Double.
 	 * @param String
 	 * @return
 	 */
@@ -283,11 +283,8 @@ public class PopUpFood {
 		if(value == null || value.equals("")) 
 			//if no value specified, automatically set value
 			return 0.0;
-		)else if(Double.parseDouble(value)<0){
-			throw NullPointerException;
-		}else{
+		else
 			return Double.parseDouble(value);
-		}
 	}
 
 }
