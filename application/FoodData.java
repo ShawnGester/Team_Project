@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;	
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
@@ -34,7 +36,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
         BPTree<Double, FoodItem> fiber = new BPTree<Double, FoodItem>(3);
         BPTree<Double, FoodItem> protein = new BPTree<Double, FoodItem>(3);
 	    indexes.put("calories", calories);
-	    indexes.put("carbs", carbs);
+	    indexes.put("carbohydrate", carbs);
 	    indexes.put("fat", fat);
 	    indexes.put("fiber", fiber);
 	    indexes.put("protein", protein);
@@ -46,6 +48,7 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public void loadFoodItems(String filePath) {
+    	Boolean error = false; //keeps track of whether or not all food items were in correct format
     	foodItemList = new ArrayList<FoodItem>(); //list cleared whenever this method is called
     	Scanner scanner = null;
     	try{
@@ -55,21 +58,18 @@ public class FoodData implements FoodDataADT<FoodItem> {
     			String line = scanner.next();
     			String[] splitLine = line.split(",");
     			if(splitLine.length == 0) {
-    				break;
+    				break; //skipping empty lines with no food
     			}
     			String foodId = splitLine[0];
     			String foodName = splitLine[1];
-    			
-    			
     			FoodItem newFood = new FoodItem(foodId, foodName);
-
     			String cals = splitLine[2].toUpperCase();
-    			if(cals.equals("CALORIES")) {
+    			if(cals.equals("CALORIES")) { //checking for appropriate format of data input
     				double cal_val = Double.parseDouble(splitLine[3]);
     				newFood.addNutrient("calories", cal_val);
     			}
     			else {
-    				throw new java.lang.Exception("1");
+    				error = true; //error is set to true if format other than expected
     			}
     			String fat = splitLine[4].toUpperCase(); //check the indexes in the array for accuracy
     			if(fat.equals("FAT")) {
@@ -77,50 +77,53 @@ public class FoodData implements FoodDataADT<FoodItem> {
     				newFood.addNutrient("fat", fat_val);
     			}
     			else {
-    				throw new java.lang.Exception("2");
+    				error = true;
     			}
-    			
-    			
-    			
     			String carb = splitLine[6].toUpperCase();
     			if(carb.equals("CARBOHYDRATE")) {
     				double carb_val = Double.parseDouble(splitLine[7]);
     				newFood.addNutrient("carbohydrate", carb_val);
     			}
     			else {
-    				throw new java.lang.Exception("3");
+    				error = true;
     			}
-    			
-    			
     			String fiber = splitLine[8].toUpperCase();
     			if(fiber.equals("FIBER")) {
     				double fiber_val = Double.parseDouble(splitLine[9]);
     				newFood.addNutrient("fiber", fiber_val);
     			}
     			else {
-    				throw new java.lang.Exception("4");
+    				error = true;
     			}
-    			
     			String protein = splitLine[10].toUpperCase();
     			if(protein.equals("PROTEIN")) {
     				double protein_val = Double.parseDouble(splitLine[11]);
     				newFood.addNutrient("protein", protein_val);
     			}
-    			
     			else {
-    				throw new java.lang.Exception("5");
+    				error = true;
     			} 
     			foodItemList.add(newFood);
+    			//adding each food to each BPTree of nutrients
+    			indexes.get("calories").insert(Double.parseDouble(splitLine[3]), newFood);
+    			indexes.get("fat").insert(Double.parseDouble(splitLine[5]), newFood);
+    			indexes.get("carbohydrate").insert(Double.parseDouble(splitLine[7]), newFood);
+    			indexes.get("fiber").insert(Double.parseDouble(splitLine[9]), newFood);
+    			indexes.get("protein").insert(Double.parseDouble(splitLine[11]), newFood);
     		}
     	}
-    	catch(Exception e){
-    		System.out.println(e);
+    	catch(NumberFormatException e){
+    		error = true; //catching potential exception from parsing nutrient values to doubles
     	}
+    	catch (IOException e) {
+			//not sure what to do here, talk to Dani about error handling again.
+		}
     	finally {
     		if(null != scanner) {
     			scanner.close();
     		}
     	}
+    	//sorting food item list alphabetically by name
     	foodItemList.sort((FoodItem f1, FoodItem f2) -> f1.getName().toLowerCase().compareTo(f2.getName().toLowerCase()));
         return;
     }
@@ -159,120 +162,33 @@ public class FoodData implements FoodDataADT<FoodItem> {
      */
     @Override
     public List<FoodItem> filterByNutrients(List<String> rules) {
+    	//need to add a try catch block for parsing doubles for the value of the rules
     	//rules in the format "nutrient comparator value"
-    	List<FoodItem> filterListIterate = new ArrayList<FoodItem>();
-    	filterListIterate = foodItemList;
-    	List<FoodItem> filterListFiltered = new ArrayList<FoodItem>();
+    	List<List<FoodItem>> mergeList = new ArrayList<List<FoodItem>>();
     	for(String rule : rules) {
-    		String[] splitList = rule.split(" ");
-    		for(FoodItem food : filterListIterate) {		
+    		String[] splitList = rule.split(" ");		
     			if(splitList[0].toLowerCase().equals("calories")) {
-    				if(splitList[1].equals("==")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("calories")==value){
-    						filterListFiltered.add(food);
-    					}
-    				}
-    				else if(splitList[1].equals("<=")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("calories")<=value){
-    						filterListFiltered.add(food);
-    					}
-    				}
-    				else if(splitList[1].equals(">=")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("calories")>=value){
-    						filterListFiltered.add(food);
-    					}
-    				}
+    				mergeList.add(indexes.get("calories").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
     			}
     			else if(splitList[0].toLowerCase().equals("fat")) {
-    				if(splitList[1].equals("==")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("fat")==value){
-    						filterListFiltered.add(food);
-    					}
-    				}
-    				else if(splitList[1].equals("<=")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("fat")<=value){
-    						filterListFiltered.add(food);
-    					}
-    				}
-    				else if(splitList[1].equals(">=")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("fat")>=value){
-    						filterListFiltered.add(food);
-    					}
-    				}
-    			}
-    			else if(splitList[0].toLowerCase().equals("protein")) {
-    				if(splitList[1].equals("==")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("protein")==value){
-    						filterListFiltered.add(food);
-    					}
-    				}
-    				else if(splitList[1].equals("<=")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("protein")<=value){
-    						filterListFiltered.add(food);
-    					}
-    				}
-    				else if(splitList[1].equals(">=")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("protein")>=value){
-    						filterListFiltered.add(food);
-    					}
-    				}
-    			}
-    			else if(splitList[0].toLowerCase().equals("fiber")) {
-    				//System.out.println("do you get here?");
-    				if(splitList[1].equals("==")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("fiber")==value){
-    						filterListFiltered.add(food);
-    					}
-    				}
-    				else if(splitList[1].equals("<=")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("fiber")<=value){
-    						filterListFiltered.add(food);
-    					}
-    				}
-    				else if(splitList[1].equals(">=")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("fiber")>=value){
-    						filterListFiltered.add(food);
-    					}
-    				}
+    				mergeList.add(indexes.get("fat").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
     			}
     			else if(splitList[0].toLowerCase().equals("carbohydrate")) {
-    				if(splitList[1].equals("==")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("carbohydrate")==value){
-    						filterListFiltered.add(food);
-    					}
-    				}
-    				else if(splitList[1].equals("<=")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("carbohydrate")<=value){
-    						filterListFiltered.add(food);
-    					}
-    				}
-    				else if(splitList[1].equals(">=")) {
-    					Double value = Double.parseDouble(splitList[2]);
-    					if(food.getNutrientValue("carbohydrate")>=value){
-    						filterListFiltered.add(food);
-    					}
-    				}
+    				mergeList.add(indexes.get("carbohydrate").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
     			}
-    		}
-    		filterListIterate = filterListFiltered;
-    		filterListFiltered = new ArrayList<FoodItem>();
+    			else if(splitList[0].toLowerCase().equals("fiber")) {
+    				mergeList.add(indexes.get("fiber").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
+    			}
+    			else if(splitList[0].toLowerCase().equals("protein")) {
+    				mergeList.add(indexes.get("protein").rangeSearch(Double.parseDouble(splitList[2]), splitList[1]));
+    			}
     	}
-    	filterListIterate.sort((FoodItem f1, FoodItem f2)-> f1.getName().toUpperCase().compareTo(f2.getName().toUpperCase()));
-    	return filterListIterate;
+    	List<FoodItem> retList = foodItemList;
+    	for(List<FoodItem> filterList : mergeList) {
+    		retList.retainAll(filterList);
+    	}
+    	retList.sort((FoodItem f1, FoodItem f2)-> f1.getName().toUpperCase().compareTo(f2.getName().toUpperCase()));
+    	return retList;
     }
 
     /*
