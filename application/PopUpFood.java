@@ -281,7 +281,7 @@ public class PopUpFood {
 	/**
 	 * checks to see if input value is a valid input. If there is no
 	 * input, the value is automatically set to 0.0. Throws exception
-	 * if parameter value cannot be parsed into a Double.
+	 * if parameter value cannot be parsed into a Double or is negative.
 	 * @param String
 	 * @return
 	 */
