@@ -219,27 +219,18 @@ public class PopUpFood {
 				//get food name
 				String name = foodInput.getText();
 				
-				//create an id until it is unique
+
 				while(!validID){
-					try{
+				try{
+					if(!name.trim().equals("")){
+						//get id
 						id = UUID.randomUUID().toString();
 						id = id.replace("-", "");
 						id = id.substring(0,24);
-						validID = true;
 						
 						//create new food
-						if(!name.trim().equals(""))
-							newFood = new FoodItem(id, name);
-						
-					}catch(Exception e){
-						//ignore
-					}
-				}
-
-				
-
-				try{
-					if(!name.trim().equals("")){
+						newFood = new FoodItem(id, name);
+						validID = true;
 						
 						//input nutrient values
 						newFood.addNutrient("calories", getValue(calorieInput.getText()));
@@ -255,9 +246,9 @@ public class PopUpFood {
             					foodWindow.hide();
             				}else{ 
             					//do not except a name if it has only whitespace characters
-            					throw new Exception();
+            					throw new NumberFormatException();
             				}
-            			}catch(Exception e){
+            			}catch(NumberFormatException e){
             				//prompt user to fix their mistake
             				Label errorMessage = new Label("*Error: improper input fields");
             				errorMessage.setFont(new Font(10));
@@ -268,7 +259,10 @@ public class PopUpFood {
             					right.getChildren().add(3, errorMessage);
             					error1 = false;
             				}
-            			}
+            			}catch(Exception e){
+					//ignore
+				}
+				}
           	 	 }
 	   	});
 		
