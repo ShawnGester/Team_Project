@@ -33,3 +33,11 @@
 	-fx-background-repeat:no-repeat;
 	
 }
+#foodNameLabel, #mealNameLabel {
+	-fx-font: bold 1em "Arial";
+}
+
+#nutrientLabel, #foodLabel {
+	-fx-font: bold 1em "Arial";
+	-fx-underline: true
+}

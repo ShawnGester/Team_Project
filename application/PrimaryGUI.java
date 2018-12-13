@@ -326,6 +326,8 @@ public class PrimaryGUI {
 				
 				String selectedFoodName = foodLView.getSelectionModel().getSelectedItem(); // Food
 				foodNameDetailsPane.setText("Food Name: " + selectedFoodName);
+				foodNameDetailsPane.setId("foodNameLabel"); // Set CSS Id
+				
 				VBox nutrientVBox = new VBox();			// Holds nutrient labels
 				VBox nutrientValueVBox = new VBox(); 	// Holds nutrient values
 				
@@ -648,11 +650,15 @@ public class PrimaryGUI {
 
 				String selectedMealName = mealListView.getSelectionModel().getSelectedItem();
 				mealNameDetailsPane.setText("Meal Name: " + selectedMealName);
+				mealNameDetailsPane.setId("mealNameLabel");
 				
 				BorderPane nutrientBPane = new BorderPane(); 	// BPane in left of display pane
 				BorderPane mealFoodsBPane = new BorderPane(); 	// BPane in right of display pane
 				Label nutrientLabel = new Label("Nutrients");	// Nutrient data displayed below
 				Label foodListLabel = new Label("Foods");		// List of foods displayed below
+				nutrientLabel.setId("nutrientLabel");
+				foodListLabel.setId("foodLabel");
+				
 				ListView<String> mealFoodsListView = new ListView<String>(); // List of foods in meal
 				
 				// Set Width of mealFoodsListView to ~20% of the screen width
