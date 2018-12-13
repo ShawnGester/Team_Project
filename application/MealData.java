@@ -124,8 +124,9 @@ public class MealData {
 	public List<Meal> filterByNutrient(List<String> rules){
     	    	//rules in the format "nutrient comparator value"
     		List<List<Meal>> mergeList = new ArrayList<List<Meal>>(); //storing the food lists from each filter
-    		for(String rule : rules) {
-    			String[] splitList = rule.split(" ");
+		try {
+    			for(String rule : rules) {
+    				String[] splitList = rule.split(" ");
     				if(splitList[0].toLowerCase().equals("calories")) {
     					mergeList.add(trees.get("calories").rangeSearch(Double.parseDouble(splitList[2]), 
 											splitList[1]));
@@ -146,7 +147,10 @@ public class MealData {
     					mergeList.add(trees.get("protein").rangeSearch(Double.parseDouble(splitList[2]), 
 										       splitList[1]));
     				}
-    		}
+    			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
     		List<FoodItem> retList = new ArrayList<FoodItem>(foodItemList);
     		for(List<FoodItem> filterList : mergeList) { //takes the intersection of the lists of food from each filter
     			retList.retainAll(filterList);
@@ -154,5 +158,5 @@ public class MealData {
     		retList.sort((FoodItem f1, FoodItem f2)-> f1.getName().toUpperCase().compareTo(f2.getName().toUpperCase()));
     		return retList;
 		}
-}
+	}
 
